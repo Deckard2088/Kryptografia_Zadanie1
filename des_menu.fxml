@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<SplitPane dividerPositions="0.37554904831625174" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="670.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+  <items>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="898.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="38.0" prefWidth="65.0" text="Klucz">
+               <font>
+                  <Font name="Times New Roman" size="18.0" />
+               </font>
+            </Label>
+            <Button layoutX="299.0" layoutY="63.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="150.0" text="Generuj klucz">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Button>
+            <Button layoutX="772.0" layoutY="129.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Zapisz">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Button>
+            <Button layoutX="348.0" layoutY="130.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Wczytaj">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Button>
+            <Label layoutX="39.0" layoutY="38.0" text="Wartość klucza heksadecymalnie">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="298.0" layoutY="38.0" text="Wygeneruj wartość klucza">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Label>
+            <TextField layoutX="41.0" layoutY="63.0" prefHeight="26.0" prefWidth="219.0" />
+            <Label layoutX="41.0" layoutY="135.0" text="Wczytaj klucz z pliku">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Label>
+            <TextField layoutX="185.0" layoutY="130.0" promptText="Nazwa pliku klucza" />
+            <Label layoutX="473.0" layoutY="135.0" text="Wczytaj klucz z pliku">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Label>
+            <TextField layoutX="613.0" layoutY="130.0" promptText="Nazwa pliku klucza" />
+         </children></AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="234.0" prefWidth="638.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutY="-5.0" prefHeight="38.0" prefWidth="240.0" text="Szyfrowanie / Deszyfrowanie">
+               <font>
+                  <Font name="Times New Roman" size="18.0" />
+               </font>
+            </Label>
+            <Button layoutX="273.0" layoutY="61.0" mnemonicParsing="false" text="Otwórz">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Button>
+            <TextArea layoutX="39.0" layoutY="104.0" prefHeight="200.0" prefWidth="294.0" promptText="Tu  podaj tekst jawny" />
+            <Label layoutX="39.0" layoutY="33.0" text="Otwórz plik zawierający tekst jawny">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Label>
+            <TextField layoutX="39.0" layoutY="61.0" prefHeight="26.0" prefWidth="219.0" promptText="Nazwa pliku z tekstem jawnym" />
+            <Label layoutX="558.0" layoutY="41.0" text="Otwórz plik zawierający szyfrogram">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Label>
+            <TextField layoutX="558.0" layoutY="61.0" prefHeight="26.0" prefWidth="219.0" promptText="Nazwa pliku z szyfrogramem" />
+            <Button layoutX="790.0" layoutY="61.0" mnemonicParsing="false" text="Otwórz">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Button>
+            <TextArea layoutX="558.0" layoutY="107.0" prefHeight="200.0" prefWidth="294.0" promptText="Tu  podaj szyfrogram" />
+            <Button layoutX="415.0" layoutY="136.0" mnemonicParsing="false" text="Szyfruj =&gt;">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Button>
+            <Button layoutX="408.0" layoutY="181.0" mnemonicParsing="false" text="&lt;= Deszyfruj">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Button>
+            <RadioButton layoutX="412.0" layoutY="227.0" mnemonicParsing="false" text="Plik">
+               <font>
+                  <Font name="Times New Roman" size="13.0" />
+               </font>
+            </RadioButton>
+            <RadioButton layoutX="412.0" layoutY="255.0" mnemonicParsing="false" text="Okno">
+               <font>
+                  <Font name="Times New Roman" size="13.0" />
+               </font>
+            </RadioButton>
+            <Label layoutX="39.0" layoutY="329.0" text="Zapisz plik zawierający tekst jawny">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="560.0" layoutY="337.0" text="Zapisz plik zawierający szyfrogram">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Label>
+            <TextField layoutX="39.0" layoutY="353.0" prefHeight="26.0" prefWidth="219.0" promptText="Nazwa pliku z tekstem jawnym" />
+            <TextField layoutX="558.0" layoutY="360.0" prefHeight="26.0" prefWidth="219.0" promptText="Nazwa pliku z szyfrogramem" />
+            <Button layoutX="285.0" layoutY="352.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Zapisz">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Button>
+            <Button layoutX="790.0" layoutY="360.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Zapisz">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </Button>
+         </children></AnchorPane>
+  </items>
+</SplitPane>
