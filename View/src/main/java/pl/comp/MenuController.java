@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -78,7 +80,12 @@ public class MenuController extends Application {
     @FXML
     private Button decryptionButton;
 
-    // radio buttony (nie mają fx:id w XML, więc możesz dodać ręcznie jeśli chcesz)
+    // radio buttony
+    @FXML
+    private RadioButton radioButtonPlik;
+
+    @FXML
+    private RadioButton radioButtonOkno;
 
     @FXML
     private Label saveFileWithPlaintextLabel;
@@ -97,6 +104,7 @@ public class MenuController extends Application {
 
     @FXML
     private Button saveFileWithCiphertextButton;
+
 
     @Override
     public void start(Stage stage) throws Exception {
