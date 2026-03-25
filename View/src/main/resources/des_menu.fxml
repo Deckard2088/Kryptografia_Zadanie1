@@ -76,7 +76,7 @@
                </font>
             </Label>
             <TextField fx:id="nameOfFileWithPlaintextTextField" layoutX="39.0" layoutY="61.0" prefHeight="26.0" prefWidth="219.0" promptText="Nazwa pliku z tekstem jawnym" />
-            <Label fx:id="fileWithCiphertextlabel"layoutX="558.0" layoutY="41.0" text="Otwórz plik zawierający szyfrogram">
+            <Label fx:id="fileWithCiphertextlabel" layoutX="558.0" layoutY="41.0" text="Otwórz plik zawierający szyfrogram">
                <font>
                   <Font name="Times New Roman" size="14.0" />
                </font>
