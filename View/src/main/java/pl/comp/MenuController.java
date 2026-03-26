@@ -1,17 +1,14 @@
 package pl.comp;
 
-import javafx.application.Application;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import javafx.scene.control.*;
 
-import java.awt.*;
+public class MenuController {
 
-public class MenuController extends Application {
+    private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
+
     // --- KEY SECTION ---
     @FXML
     private Label keyLabel;
@@ -105,14 +102,8 @@ public class MenuController extends Application {
     @FXML
     private Button saveFileWithCiphertextButton;
 
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/des_menu.fxml"));
-        Parent root = loader.load();
-
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+    @FXML
+    public void saveFile(){
+        logger.info("Rozpoczęcie zapisu pliku.");
     }
 }

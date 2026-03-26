@@ -4,7 +4,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.*?>
 
-<SplitPane dividerPositions="0.37554904831625174" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="670.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane dividerPositions="0.37554904831625174" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL"
+           prefHeight="670.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="pl.comp.MenuController">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="898.0">
          <children>
@@ -18,7 +20,7 @@
                   <Font name="Times New Roman" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="saveButton" layoutX="772.0" layoutY="129.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Zapisz">
+            <Button fx:id="saveButton" layoutX="772.0" layoutY="129.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Zapisz" onAction="#saveFile">
                <font>
                   <Font name="Times New Roman" size="14.0" />
                </font>
