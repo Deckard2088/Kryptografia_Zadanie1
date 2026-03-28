@@ -20,12 +20,12 @@
                   <Font name="Times New Roman" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="saveButton" layoutX="772.0" layoutY="129.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Zapisz" onAction="#saveFile">
+            <Button fx:id="saveButton" layoutX="772.0" layoutY="129.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Zapisz" onAction="#saveFileKey">
                <font>
                   <Font name="Times New Roman" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="loadButton" layoutX="348.0" layoutY="130.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Wczytaj">
+            <Button fx:id="loadButton" layoutX="348.0" layoutY="130.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Wczytaj" onAction="#loadFile">
                <font>
                   <Font name="Times New Roman" size="14.0" />
                </font>
@@ -122,12 +122,14 @@
             </Label>
             <TextField fx:id="nameOfFileWithPlaintextTextFieldEnd" layoutX="39.0" layoutY="353.0" prefHeight="26.0" prefWidth="219.0" promptText="Nazwa pliku z tekstem jawnym" />
             <TextField fx:id="nameOfFileWithCiphertextTextFieldEnd" layoutX="558.0" layoutY="360.0" prefHeight="26.0" prefWidth="219.0" promptText="Nazwa pliku z szyfrogramem" />
-            <Button fx:id="saveFileWithPlaintextButton" layoutX="285.0" layoutY="352.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Zapisz">
+            <Button fx:id="saveFileWithPlaintextButton" layoutX="285.0" layoutY="352.0" mnemonicParsing="false" prefHeight="26.0"
+                    prefWidth="74.0" text="Zapisz" onAction="#saveFilePlaintext">
                <font>
                   <Font name="Times New Roman" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="saveFileWithCiphertextButton" layoutX="790.0" layoutY="360.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Zapisz">
+            <Button fx:id="saveFileWithCiphertextButton" layoutX="790.0" layoutY="360.0" mnemonicParsing="false" prefHeight="26.0"
+                    prefWidth="74.0" text="Zapisz" onAction="#saveFileCiphertext">
                <font>
                   <Font name="Times New Roman" size="14.0" />
                </font>

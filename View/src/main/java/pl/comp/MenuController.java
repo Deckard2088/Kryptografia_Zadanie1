@@ -109,24 +109,50 @@ public class MenuController {
     @FXML
     private Button saveFileWithCiphertextButton;
 
+    /*
+    Funkcja do zapisywania do pliku; w zależności od tego który przycisk 'zapisz' został kliknięty
+    plik ma nadaną inną nazwę domyślną oraz pobiera dane z innego pola tekstowego
+    TextInputControl to klasa bazowa dla TextArea i TextField
+     */
     @FXML
-    public void saveFile(){
+    public void saveFile(TextInputControl textInput, String defaultName){
         logger.info("Rozpoczecie zapisu pliku.");
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("tego typu");
 
-        fileChooser.setInitialFileName("plik.txt");
+        fileChooser.setInitialFileName(defaultName);
         Stage stage = (Stage) saveButton.getScene().getWindow();
         File file = fileChooser.showSaveDialog(stage);
 
         if (file != null) {
             try {
-                Files.writeString(file.toPath(), saveKeyToFileTextField.getText());
+                //Files.writeString(file.toPath(), saveKeyToFileTextField.getText());
+                Files.writeString(file.toPath(), textInput.getText());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
+    }
+
+    @FXML
+    public void saveFileKey(){
+        saveFile(saveKeyToFileTextField, "klucz.txt");
+    }
+
+    @FXML
+    public void saveFileCiphertext(){
+        saveFile(ciphertextTextField, "szyfrogram.txt");
+    }
+
+    @FXML
+    public void saveFilePlaintext(){
+        saveFile(plaintextTextField, "tekst jawny.txt");
+    }
+
+    @FXML
+    public void loadFile(){
+        logger.info("Rozpoczecie procesu otwierania pliku.");
     }
 }
