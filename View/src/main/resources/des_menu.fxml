@@ -25,7 +25,7 @@
                   <Font name="Times New Roman" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="loadButton" layoutX="348.0" layoutY="130.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Wczytaj" onAction="#loadFile">
+            <Button fx:id="loadButton" layoutX="348.0" layoutY="130.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Wczytaj" onAction="#loadFileKey">
                <font>
                   <Font name="Times New Roman" size="14.0" />
                </font>
@@ -61,7 +61,8 @@
                   <Font name="Times New Roman" size="18.0" />
                </font>
             </Label>
-            <Button fx:id="openFileWithPlaintextButton" layoutX="273.0" layoutY="61.0" mnemonicParsing="false" text="Otwórz">
+            <Button fx:id="openFileWithPlaintextButton" layoutX="273.0" layoutY="61.0" mnemonicParsing="false" text="Otwórz"
+            onAction="#loadFilePlaintext">
                <font>
                   <Font name="Times New Roman" size="14.0" />
                </font>
@@ -79,7 +80,8 @@
                </font>
             </Label>
             <TextField fx:id="nameOfFileWithCiphertextTextField" layoutX="558.0" layoutY="61.0" prefHeight="26.0" prefWidth="219.0" promptText="Nazwa pliku z szyfrogramem" />
-            <Button fx:id="openFileWithCiphertextButton" layoutX="790.0" layoutY="61.0" mnemonicParsing="false" text="Otwórz">
+            <Button fx:id="openFileWithCiphertextButton" layoutX="790.0" layoutY="61.0" mnemonicParsing="false" text="Otwórz"
+            onAction="#loadFileCiphertext">
                <font>
                   <Font name="Times New Roman" size="14.0" />
                </font>

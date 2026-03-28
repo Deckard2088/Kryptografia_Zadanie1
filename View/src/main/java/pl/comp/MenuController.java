@@ -152,7 +152,41 @@ public class MenuController {
     }
 
     @FXML
-    public void loadFile(){
+    public void loadFile(TextInputControl textInput, TextInputControl textFieldWithFileName) {
         logger.info("Rozpoczecie procesu otwierania pliku.");
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("testtyy");
+
+        Stage stage = (Stage) loadButton.getScene().getWindow();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            try {
+                String content = Files.readString(file.toPath());
+                textInput.setText(content);
+                logger.info("Wczytano plik: {}", file.getAbsolutePath());
+
+                String fileName = file.getName();
+                textFieldWithFileName.setText(fileName);
+            } catch (IOException e) {
+                logger.error("Błąd odczytu pliku", e);
+            }
+        }
+    }
+
+    @FXML
+    public void loadFileKey(){
+        loadFile(keyValueTextField, loadKeyFromFileTextField);
+    }
+
+    @FXML
+    public void loadFileCiphertext(){
+        loadFile(ciphertextTextField, nameOfFileWithCiphertextTextField);
+    }
+
+    @FXML
+    public void loadFilePlaintext(){
+        loadFile(plaintextTextField, nameOfFileWithPlaintextTextField);
     }
 }
