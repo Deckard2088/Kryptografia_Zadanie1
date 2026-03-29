@@ -98,7 +98,8 @@
                </font>
             </Button>
 
-            <RadioButton fx:id="radioButtonPlik" layoutX="412.0" layoutY="227.0" mnemonicParsing="false" text="Plik">
+            <RadioButton fx:id="radioButtonPlik" layoutX="412.0" layoutY="227.0" mnemonicParsing="false" text="Plik"
+            onAction="#radioButtonFileChosen">
                <font>
                   <Font name="Times New Roman" size="13.0" />
                </font>
@@ -106,7 +107,8 @@
                   <ToggleGroup fx:id="tG"/>
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="radioButtonOkno" layoutX="412.0" layoutY="255.0" mnemonicParsing="false" text="Okno" toggleGroup="$tG">
+            <RadioButton fx:id="radioButtonOkno" layoutX="412.0" layoutY="255.0" mnemonicParsing="false" text="Okno"
+                         toggleGroup="$tG" onAction="#radioButtonWindowChosen">
                <font>
                   <Font name="Times New Roman" size="13.0" />
                </font>

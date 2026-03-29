@@ -114,14 +114,18 @@ public class MenuController {
     plik ma nadaną inną nazwę domyślną oraz pobiera dane z innego pola tekstowego
     TextInputControl to klasa bazowa dla TextArea i TextField
      */
-    @FXML
-    public void saveFile(TextInputControl textInput, String defaultName){
+    public void saveFile(TextInputControl textInput,TextInputControl userTextInput , String defaultName){
         logger.info("Rozpoczecie zapisu pliku.");
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("tego typu");
 
-        fileChooser.setInitialFileName(defaultName);
+        //jeśli wcześniej nic nie otwierano to domyślna nazwa pliku, w przeciwnym razie domyślna nazwa to nazwa pliku otwieranego
+        if (userTextInput.getText().isEmpty()) {
+            fileChooser.setInitialFileName(defaultName);
+        } else {
+            fileChooser.setInitialFileName(userTextInput.getText());
+        }
         Stage stage = (Stage) saveButton.getScene().getWindow();
         File file = fileChooser.showSaveDialog(stage);
 
@@ -133,25 +137,23 @@ public class MenuController {
                 e.printStackTrace();
             }
         }
-
     }
 
     @FXML
     public void saveFileKey(){
-        saveFile(saveKeyToFileTextField, "klucz.txt");
+        saveFile(keyValueTextField, saveKeyToFileTextField,"klucz.txt");
     }
 
     @FXML
     public void saveFileCiphertext(){
-        saveFile(ciphertextTextField, "szyfrogram.txt");
+        saveFile(ciphertextTextField, nameOfFileWithCiphertextTextFieldEnd, "szyfrogram.txt");
     }
 
     @FXML
     public void saveFilePlaintext(){
-        saveFile(plaintextTextField, "tekst jawny.txt");
+        saveFile(plaintextTextField, nameOfFileWithPlaintextTextFieldEnd, "tekst jawny.txt");
     }
 
-    @FXML
     public void loadFile(TextInputControl textInput, TextInputControl textFieldWithFileName) {
         logger.info("Rozpoczecie procesu otwierania pliku.");
 
@@ -188,5 +190,35 @@ public class MenuController {
     @FXML
     public void loadFilePlaintext(){
         loadFile(plaintextTextField, nameOfFileWithPlaintextTextField);
+    }
+
+    @FXML
+    public void radioButtonFileChosen(){
+        logger.info("Wybrano tryb 'Plik' przez radio button.");
+        keyValueTextField.setDisable(true);
+        plaintextTextField.setDisable(true);
+        ciphertextTextField.setDisable(true);
+
+        loadKeyFromFileTextField.setDisable(false);
+        nameOfFileWithCiphertextTextField.setDisable(false);
+        nameOfFileWithPlaintextTextField.setDisable(false);
+    }
+
+    @FXML
+    public void radioButtonWindowChosen(){
+        logger.info("Wybrano tryb 'Okno' przez radio button.");
+        keyValueTextField.setDisable(false);
+        plaintextTextField.setDisable(false);
+        ciphertextTextField.setDisable(false);
+
+        loadKeyFromFileTextField.setDisable(true);
+        nameOfFileWithCiphertextTextField.setDisable(true);
+        nameOfFileWithPlaintextTextField.setDisable(true);
+    }
+
+    @FXML
+    public void initialize(){
+        radioButtonPlik.setSelected(true);
+        radioButtonFileChosen();
     }
 }
