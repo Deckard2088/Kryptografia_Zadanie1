@@ -5,14 +5,17 @@ import java.nio.charset.StandardCharsets;
 public class DES {
     //możnaby nazwy zmienić bo nwm czy później z czymś kolidować nie będą
     private static final byte[] schemaForPC1 = {
-            57, 49, 41, 33, 25, 17, 9,
-            1 ,58, 50, 42, 34, 26, 18,
-            10, 2, 59, 51, 43, 35, 27,
-            19, 11, 3, 60, 52, 44, 36,//tymczasowe rozszerzenie bo cos sprawdzałem
-            63, 55, 47, 39, 31, 23, 15,
-            7, 62, 54, 46, 38, 30, 22,
-            14, 6, 61, 53, 45, 37, 29,
-            21, 13, 5, 28, 20, 12, 4
+            57, 49, 41, 33, 25, 17, 9, 1,
+            58, 50, 42, 34, 26, 18, 10, 2,
+            59, 51, 43, 35, 27, 19, 11, 3,
+            60, 52, 44, 36, 63, 55, 47, 39,
+            31, 23, 15, 7, 62, 54, 46, 38,
+            30, 22, 14, 6, 61, 53, 45, 37,
+            29, 21, 13, 5, 28, 20, 12, 4
+    };
+
+    private static final byte[] numberOfShiftsForROL = {
+            1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1
     };
 
     //bajty zakres od -128 do 127
@@ -44,7 +47,9 @@ public class DES {
             byte bitNumber = (byte) (7 - ((positions[i] - 1) % 8));
             //wartość bitu (0 lub 1)
             byte valueOfBit = (byte) ((byteTable[byteNumber] >> bitNumber) & 1);
-            permutatedBytetable[i/8] = (byte) (permutatedBytetable[i/8] | (valueOfBit << bitNumber));
+
+            int outBit = 7 - (i % 8);
+            permutatedBytetable[i/8] = (byte) (permutatedBytetable[i/8] | (valueOfBit << outBit));
         }
         return permutatedBytetable;
     }
