@@ -13,7 +13,7 @@ public class AlgorithmsTest {
 
         System.out.println(tablicatestowa.toString());
 
-        Algorithms.ROL(1, tablicatestowa);
+        Algorithms.ROL(tablicatestowa);
         for (int i = 0; i<tablicatestowa.length; i++) {
             System.out.print(tablicatestowa[i] + " ");
         }
