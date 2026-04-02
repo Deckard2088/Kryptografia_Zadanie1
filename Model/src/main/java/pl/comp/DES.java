@@ -146,7 +146,7 @@ public class DES {
         for (int i = 0; i < 28; i++){
             int j = i + 28;
             LeftPart[i] = keyBitsIndexes[i];
-            RightPart[j] = keyBitsIndexes[j];
+            RightPart[i] = keyBitsIndexes[j];
         }
 
         for (int i = 0; i < numberOfRepeats; i++) {
@@ -158,7 +158,7 @@ public class DES {
         for (int i = 0; i < 28; i++){
             int j = i + 28;
             subKey[i] = LeftPart[i];
-            subKey[j] = RightPart[j];
+            subKey[j] = RightPart[i];
         }
 
         return subKey;
