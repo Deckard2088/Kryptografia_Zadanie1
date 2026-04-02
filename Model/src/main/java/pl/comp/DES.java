@@ -117,13 +117,15 @@ public class DES {
     }
 
     public byte[] bitPermutation(byte[] byteTable, byte[] positions){
-        byte[] permutatedBytetable = new byte[7];
+        //funckja ma działa uniwersalnie i stąd to oblicznie w długości tablicy permutatedBytetable
+        //dla 64 bitowego wejścia dostajemy 56 bitowe wyjście
+        byte[] permutatedBytetable = new byte[(positions.length + 7) / 8];
         for (int i = 0; i < positions.length; i++){
             //pobieramy z którego bajtu chcemy wyciągnąc bit (np. dla 57. bitu to 6 bajt - przez to że ignorujemy bity parzystości)
             byte byteNumber = (byte) ((positions[i] - 1) / 8);
             //pobieramy który bit chcemy wyjąć w ramach tego bajtu (np. dla 57. bitu to 1 bit 7 bajtu)
             byte bitNumber = (byte) (7 - ((positions[i] - 1) % 8));
-            //wartość bitu (0 lub 1)
+            //wartość bitu (0 lub 1): bit który nas interesuje zostaje przeniesiony skrajnie na prawo a następnie operacja OR z 1
             byte valueOfBit = (byte) ((byteTable[byteNumber] >> bitNumber) & 1);
 
             int outBit = 7 - (i % 8);
