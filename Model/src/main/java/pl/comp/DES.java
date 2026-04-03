@@ -19,6 +19,7 @@ public class DES {
             29, 21, 13, 5, 28, 20, 12, 4
     };
 
+    //PC-2 ?
     private static final byte[] compPBOX = {
             14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10,
             23, 19, 12, 4, 26, 8, 16, 7, 27, 20, 13, 2,
@@ -180,7 +181,19 @@ public class DES {
         byte[] tablicaPomocnicza = generateSubKey((byte) 0, configuratedKey);
         for (int i = 0; i < subKeys.length; i++){
             byte[] subKey = generateSubKey(numberOfShiftsForROL[i], tablicaPomocnicza);
-            subKeys[i] = subKey;
+            subKeys[i] = bitPermutation(subKey, compPBOX);
+        }
+    }
+
+    public void feistelFunctions(byte[] subKey, byte[] rightSide){
+        //permutacja roszerzona (48 bitów)
+        byte[] permutatedRightSide = bitPermutation(rightSide, PBox);
+        //XOR z bitami podklucza
+        byte[] xored = Algorithms.xor(subKey, permutatedRightSide);
+        //dzielimy to na 8 grup po 6 bitów
+        byte[] groups = new byte[8];
+        for (int i = groups.length; i > 0; i--){
+            //groups[i] = xored >> i*6;
         }
     }
 }
