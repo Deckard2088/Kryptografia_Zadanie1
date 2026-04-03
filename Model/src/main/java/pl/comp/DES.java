@@ -185,15 +185,34 @@ public class DES {
         }
     }
 
-    public void feistelFunctions(byte[] subKey, byte[] rightSide){
+    public byte[] feistelFunctions(byte[] subKey, byte[] rightSide){
         //permutacja roszerzona (48 bitów)
+        //NIE TA PERMUTACJA, WYMAGANA POPRAWA
         byte[] permutatedRightSide = bitPermutation(rightSide, PBox);
         //XOR z bitami podklucza
         byte[] xored = Algorithms.xor(subKey, permutatedRightSide);
+        long xoredLong = Algorithms.toLong(xored, 0, xored.length);
         //dzielimy to na 8 grup po 6 bitów
         byte[] groups = new byte[8];
-        for (int i = groups.length; i > 0; i--){
-            //groups[i] = xored >> i*6;
+        for (int i = 0; i < groups.length; i++){
+            groups[i] =  (byte) (xoredLong >> (42 - i * 6) & 0b00111111);
         }
+        //odczytujemy wartości z SBOXów
+        byte valuesSBox[] = new byte[4];
+        for (int i = 0; i < groups.length; i++){
+            int firstBit = groups[i] >> 4 & 0b00000010;
+            int lastBit = groups[i] & 1;
+            int row = firstBit | lastBit;
+            int column = groups[i] >> 1 & 0b00011110;
+            byte sBox = SBox[i][16 * row + column];
+            //bajty w tej tablicy są w połowie puste, a do dalszej operacji potrzebne są 32 bity więc 'kompresujemy'
+            if (i % 2 == 1){
+                valuesSBox[i] = (byte) (valuesSBox[i] | sBox);
+            } else {
+                valuesSBox[i] = (byte) (sBox << 4);
+            }
+        }
+
+        return bitPermutation(valuesSBox, PBox);
     }
 }

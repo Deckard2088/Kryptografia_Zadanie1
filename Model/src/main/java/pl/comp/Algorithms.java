@@ -31,16 +31,16 @@ public final class Algorithms {
         return finalTable;
     }
 
+    //zgadza sie, podjebałem ze StackOverflow ale tylko głupi by nie skorzystał. Trzeba było pilnować.
     public static final long toLong (byte[] byteArray, int offset, int len)
     {
         long val = 0;
         len = Math.min(len, 8);
-        for (int i = (len - 1); i >= 0; i--)
+        for (int i = 0; i < len; i++)
         {
             val <<= 8;
-            val |= (byteArray [offset + i] & 0x00FF);
+            val |= (byteArray[offset + i] & 0xFF);
         }
         return val;
     }
-
 }
