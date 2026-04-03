@@ -59,6 +59,14 @@ public class DES {
             33, 1, 41, 9, 49, 17, 57, 25
     };
 
+    //permutaacja rozszerzona
+    private static final byte[] E = {
+            32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9,
+            8, 9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17,
+            16, 17, 18, 19, 20, 21, 20, 21, 22, 23, 24, 25,
+            24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32, 1
+    };
+
     private static final byte[][] SBox = {
             //S1
             {14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7,
@@ -187,8 +195,7 @@ public class DES {
 
     public byte[] feistelFunctions(byte[] subKey, byte[] rightSide){
         //permutacja roszerzona (48 bitów)
-        //NIE TA PERMUTACJA, WYMAGANA POPRAWA
-        byte[] permutatedRightSide = bitPermutation(rightSide, PBox);
+        byte[] permutatedRightSide = bitPermutation(rightSide, E);
         //XOR z bitami podklucza
         byte[] xored = Algorithms.xor(subKey, permutatedRightSide);
         long xoredLong = Algorithms.toLong(xored, 0, xored.length);
