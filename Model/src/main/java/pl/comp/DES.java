@@ -26,6 +26,12 @@ public class DES {
             44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32
     };
 
+    //to jest to do feistela ostatni
+    private static final byte[] PBox = {
+            16, 7, 20, 21, 29, 12, 28, 17, 1, 15, 23, 26, 5, 18, 31, 10,
+            2, 8, 24, 14, 32, 27, 3, 9, 19, 13, 30, 6, 22, 11, 4, 25
+    };
+
     private static final byte[] numberOfShiftsForROL = {
             1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1
     };
@@ -95,6 +101,9 @@ public class DES {
             2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11}
     };
 
+    private byte[][] subKeys = {
+    };
+
     //bajty zakres od -128 do 127
     //int to 4 bajty; short to 2 bajty, long 8 bajtów (64 bity)
     //Przygotowanie klucza (permutacja + pominięcie bitów parzystości)
@@ -122,11 +131,11 @@ public class DES {
         byte[] permutatedBytetable = new byte[(positions.length + 7) / 8];
         for (int i = 0; i < positions.length; i++){
             //pobieramy z którego bajtu chcemy wyciągnąc bit (np. dla 57. bitu to 6 bajt - przez to że ignorujemy bity parzystości)
-            byte byteNumber = (byte) ((positions[i] - 1) / 8);
+            int byteNumber = ((positions[i] - 1) / 8);
             //pobieramy który bit chcemy wyjąć w ramach tego bajtu (np. dla 57. bitu to 1 bit 7 bajtu)
-            byte bitNumber = (byte) (7 - ((positions[i] - 1) % 8));
+            int bitNumber = (7 - ((positions[i] - 1) % 8));
             //wartość bitu (0 lub 1): bit który nas interesuje zostaje przeniesiony skrajnie na prawo a następnie operacja OR z 1
-            byte valueOfBit = (byte) ((byteTable[byteNumber] >> bitNumber) & 1);
+            int valueOfBit = ((byteTable[byteNumber] >> bitNumber) & 1);
 
             int outBit = 7 - (i % 8);
             permutatedBytetable[i/8] = (byte) (permutatedBytetable[i/8] | (valueOfBit << outBit));
@@ -146,7 +155,7 @@ public class DES {
         for (int i = 0; i < 28; i++){
             int j = i + 28;
             LeftPart[i] = keyBitsIndexes[i];
-            RightPart[j] = keyBitsIndexes[j];
+            RightPart[i] = keyBitsIndexes[j];
         }
 
         for (int i = 0; i < numberOfRepeats; i++) {
@@ -158,7 +167,7 @@ public class DES {
         for (int i = 0; i < 28; i++){
             int j = i + 28;
             subKey[i] = LeftPart[i];
-            subKey[j] = RightPart[j];
+            subKey[j] = RightPart[i];
         }
 
         return subKey;
