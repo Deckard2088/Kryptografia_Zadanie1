@@ -222,4 +222,30 @@ public class DES {
 
         return bitPermutation(valuesSBox, PBox);
     }
+
+    public byte[] encryptBlock(byte[] block){
+        byte[] LeftPart = new byte[32];
+        byte[] RightPart = new byte[32];
+        for (int i = 0; i < 32; i++){
+            int j = i + 32;
+            LeftPart[i] = block[i];
+            RightPart[i] = block[j];
+        }
+
+        for (int i = 0; i < 16; i++){
+            byte[] bytesAfterFeistel = this.feistelFunctions(subKeys[i], RightPart);
+            byte[] newRightSide = Algorithms.xor(bytesAfterFeistel, LeftPart);
+            LeftPart = RightPart;
+            RightPart = newRightSide;
+        }
+
+        byte[] encryptedBlock = new byte[64];
+        for (int i = 0; i < 32; i++){
+            int j = i + 32;
+            encryptedBlock[i] = LeftPart[i];
+            encryptedBlock[j] = RightPart[i];
+        }
+
+        return encryptedBlock;
+    }
 }
