@@ -101,8 +101,8 @@ public class DES {
             2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11}
     };
 
-    private byte[][] subKeys = {
-    };
+    //tablica z podkluczami
+    private byte[][] subKeys = new byte[16][];
 
     //bajty zakres od -128 do 127
     //int to 4 bajty; short to 2 bajty, long 8 bajtów (64 bity)
@@ -120,9 +120,7 @@ public class DES {
                 finalKey[i] = 0;
             }
         }
-        byte[] finalfinal = new byte[8];
-        finalfinal = bitPermutation(finalKey, PC1);
-        return finalfinal;
+        return bitPermutation(finalKey, PC1);
     }
 
     public byte[] bitPermutation(byte[] byteTable, byte[] positions){
@@ -143,7 +141,7 @@ public class DES {
         return permutatedBytetable;
     }
 
-    public byte[] generateSubKey(int numberOfRepeats, byte[] keyBitsIndexes){
+    public byte[] generateSubKey(byte numberOfRepeats, byte[] keyBitsIndexes){
         if (keyBitsIndexes.length != 56){
             logger.info("Podany klucz nie ma 56 bitów");
             return null;
@@ -176,4 +174,13 @@ public class DES {
     //poprawić tę funckję od permutacji
     //dodać tablicę z comp. p box
     // sprawdzić czy dobrze tworzy ten 48 bitowy podklucz
+
+    public void createSubKeysArray(String key){
+        byte[] configuratedKey = this.keyConfiguration(key);
+        byte[] tablicaPomocnicza = generateSubKey((byte) 0, configuratedKey);
+        for (int i = 0; i < subKeys.length; i++){
+            byte[] subKey = generateSubKey(numberOfShiftsForROL[i], tablicaPomocnicza);
+            subKeys[i] = subKey;
+        }
+    }
 }

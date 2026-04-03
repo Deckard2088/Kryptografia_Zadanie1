@@ -30,4 +30,5 @@ public final class Algorithms {
         }
         return finalTable;
     }
+
 }
