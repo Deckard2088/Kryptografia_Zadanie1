@@ -195,6 +195,16 @@ public class DES {
             subKeys[i] = bitPermutation(subKey, compPBOX);
         }
         */
+        int leftSide = Algorithms.separateByte(configuratedKey, 0, 28);
+        int rightSide = Algorithms.separateByte(configuratedKey, 28, 28);
+
+        //16 rund
+        for (int i = 0; i < 16; i++){
+            leftSide = Algorithms.ROLbits(leftSide, numberOfShiftsForROL[i]);
+            rightSide = Algorithms.ROLbits(rightSide, numberOfShiftsForROL[i]);
+            byte[] finalSubKey = Algorithms.mergeSides(leftSide, rightSide);
+            subKeys[i] = bitPermutation(finalSubKey, compPBOX);
+        }
     }
 
     public byte[] feistelFunctions(byte[] subKey, byte[] rightSide){
@@ -211,16 +221,30 @@ public class DES {
         //odczytujemy wartości z SBOXów
         byte[] valuesSBox = new byte[4];
         for (int i = 0; i < groups.length; i++){
-            int firstBit = groups[i] >> 4 & 0b00000010;
+            /*
+            int firstBit = ((groups[i] >> 5) << 1) & 0b00000010;
             int lastBit = groups[i] & 1;
             int row = firstBit | lastBit;
             int column = groups[i] >> 1 & 0b00011110;
-            byte sBox = SBox[i][16 * row + column];
+            int sBox = SBox[i][16 * row + column] & 0x0F;
             //bajty w tej tablicy są w połowie puste, a do dalszej operacji potrzebne są 32 bity więc 'kompresujemy'
             if (i % 2 == 1){
                 valuesSBox[i] = (byte) (valuesSBox[i] | sBox);
             } else {
                 valuesSBox[i] = (byte) (sBox << 4);
+            }*/
+            int firstBit = (groups[i] >> 5) & 1;       // bit 5 (MSB grupy)
+            int lastBit  =  groups[i] & 1;              // bit 0 (LSB grupy)
+            int row      = (firstBit << 1) | lastBit;   // 0–3
+            int column   = (groups[i] >> 1) & 0x0F;    // bity 1–4, wartość 0–15
+
+            int sBoxVal  = SBox[i][16 * row + column] & 0x0F; // 4 bity
+
+            int idx = i / 2;
+            if (i % 2 == 0) {
+                valuesSBox[idx] = (byte) (sBoxVal << 4);              // starsze 4 bity
+            } else {
+                valuesSBox[idx] = (byte) (valuesSBox[idx] | sBoxVal); // młodsze 4 bity
             }
         }
 
@@ -228,28 +252,35 @@ public class DES {
     }
 
     public byte[] encryptBlock(byte[] block){
-        byte[] LeftPart = new byte[32];
-        byte[] RightPart = new byte[32];
-        for (int i = 0; i < 32; i++){
-            int j = i + 32;
+        block = bitPermutation(block, IP);
+        byte[] LeftPart = new byte[4];
+        byte[] RightPart = new byte[4];
+        /*
+        for (int i = 0; i < 4; i++){
+            int j = i + 4;
             LeftPart[i] = block[i];
             RightPart[i] = block[j];
-        }
+        }*/
+        System.arraycopy(block, 0, LeftPart,  0, 4);
+        System.arraycopy(block, 4, RightPart, 0, 4);
 
         for (int i = 0; i < 16; i++){
-            byte[] bytesAfterFeistel = this.feistelFunctions(subKeys[i], RightPart);
+            byte[] bytesAfterFeistel = feistelFunctions(subKeys[i], RightPart);
             byte[] newRightSide = Algorithms.xor(bytesAfterFeistel, LeftPart);
             LeftPart = RightPart;
             RightPart = newRightSide;
         }
 
-        byte[] encryptedBlock = new byte[64];
-        for (int i = 0; i < 32; i++){
-            int j = i + 32;
+        byte[] encryptedBlock = new byte[8];
+        /*
+        for (int i = 0; i < 4; i++){
+            int j = i + 4;
             encryptedBlock[i] = LeftPart[i];
             encryptedBlock[j] = RightPart[i];
-        }
+        }*/
+        System.arraycopy(RightPart, 0, encryptedBlock, 0, 4); // uwaga: zamiana L i R po ostatniej rundzie
+        System.arraycopy(LeftPart,  0, encryptedBlock, 4, 4);
 
-        return encryptedBlock;
+        return bitPermutation(encryptedBlock, IPminus1);
     }
 }

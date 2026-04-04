@@ -39,6 +39,16 @@ public final class Algorithms {
         return value;
     }
 
+    public static byte[] mergeSides(int left, int right){
+        long combined = ((long) left << 28) | (right & 0x0FFFFFFFL);
+        byte[] result = new byte[7];
+        for (int i = 6; i >= 0; i--) {
+            result[i] = (byte) (combined & 0xFF);
+            combined >>= 8;
+        }
+        return result;
+    }
+
     public static byte[] xor(byte[] firstTable, byte[] secondTable){
         if (firstTable.length != secondTable.length){
             logger.info("Błąd: Tablice nie są tej samej długości, operacja XOR zakończona niepowodzeniem");
