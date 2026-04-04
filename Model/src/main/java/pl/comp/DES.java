@@ -129,8 +129,7 @@ public class DES {
                 finalKey[i] = 0;
             }
         }
-        //return bitPermutation(finalKey, PC1);
-        return finalKey;
+        return bitPermutation(finalKey, PC1);
     }
 
     public byte[] bitPermutation(byte[] byteTable, byte[] positions){
@@ -187,12 +186,15 @@ public class DES {
     // sprawdzić czy dobrze tworzy ten 48 bitowy podklucz
 
     public void createSubKeysArray(String key){
-        byte[] configuratedKey = this.keyConfiguration(key);
-        byte[] tablicaPomocnicza = generateSubKey((byte) 0, PC1, configuratedKey);
+        byte[] configuratedKey = keyConfiguration(key);
+        //byte[] tablicaPomocnicza = generateSubKey((byte) 0, PC1, configuratedKey);
+
+        /*
         for (int i = 0; i < subKeys.length; i++){
             byte[] subKey = generateSubKey(numberOfShiftsForROL[i], PC1, tablicaPomocnicza);
             subKeys[i] = bitPermutation(subKey, compPBOX);
         }
+        */
     }
 
     public byte[] feistelFunctions(byte[] subKey, byte[] rightSide){

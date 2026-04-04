@@ -18,6 +18,21 @@ public final class Algorithms {
         byteTable[byteTable.length - 1] = temp;
     }
 
+    public static void ROLbits(int value, int shifts){
+
+    }
+
+    public static int separateByte(byte[] tab, int firstBit, int amountOfBits){
+        int value = 0;
+        for (int i = 0; i < amountOfBits; i++){
+            int byteNumber = (firstBit+i)/8;
+            int bitNumber = 7 - ((firstBit+i) % 8);
+            int valueOfBit = ((tab[byteNumber] >> bitNumber) & 1);
+            value = (value << 1) | valueOfBit;
+        }
+        return value;
+    }
+
     public static byte[] xor(byte[] firstTable, byte[] secondTable){
         if (firstTable.length != secondTable.length){
             logger.info("Błąd: Tablice nie są tej samej długości, operacja XOR zakończona niepowodzeniem");
