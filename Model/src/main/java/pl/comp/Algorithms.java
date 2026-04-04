@@ -18,8 +18,14 @@ public final class Algorithms {
         byteTable[byteTable.length - 1] = temp;
     }
 
-    public static void ROLbits(int value, int shifts){
-
+    public static int ROLbits(int value, int shifts){
+        //w int value trzymamy 28 bitów, czyli pierwsze 4 bity od lewej to 0
+        int mask = 0x0FFFFFFF;
+        //zabezpieczenie
+        value = value & mask;
+        //robimy OR dla bitów przesuniętych w lewo i dla tych 'zawiniętych', a następnie AND z maską aby uzyskać 28 bitów
+        value = ((value << shifts) | (value >> (28-shifts))) & mask;
+        return value;
     }
 
     public static int separateByte(byte[] tab, int firstBit, int amountOfBits){
