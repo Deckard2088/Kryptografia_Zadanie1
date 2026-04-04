@@ -129,7 +129,8 @@ public class DES {
                 finalKey[i] = 0;
             }
         }
-        return bitPermutation(finalKey, PC1);
+        //return bitPermutation(finalKey, PC1);
+        return finalKey;
     }
 
     public byte[] bitPermutation(byte[] byteTable, byte[] positions){
@@ -150,7 +151,8 @@ public class DES {
         return permutatedBytetable;
     }
 
-    public byte[] generateSubKey(byte numberOfRepeats, byte[] keyBitsIndexes){
+    //same indeksy czyli de facto PC1 będzie drugim argumentem
+    public byte[] generateSubKey(byte numberOfRepeats, byte[] keyBitsIndexes, byte[] key){
         if (keyBitsIndexes.length != 56){
             logger.info("Podany klucz nie ma 56 bitów");
             return null;
@@ -177,7 +179,7 @@ public class DES {
             subKey[j] = RightPart[i];
         }
 
-        return subKey;
+        return bitPermutation(key, subKey);
     }
     //w takiej formie to najlepiej chyba będzie zrobić że wynik tej funkcji później będzie jej argumentem przy generowaniu kolejnych kluczy
     //poprawić tę funckję od permutacji
@@ -186,9 +188,9 @@ public class DES {
 
     public void createSubKeysArray(String key){
         byte[] configuratedKey = this.keyConfiguration(key);
-        byte[] tablicaPomocnicza = generateSubKey((byte) 0, configuratedKey);
+        byte[] tablicaPomocnicza = generateSubKey((byte) 0, PC1, configuratedKey);
         for (int i = 0; i < subKeys.length; i++){
-            byte[] subKey = generateSubKey(numberOfShiftsForROL[i], tablicaPomocnicza);
+            byte[] subKey = generateSubKey(numberOfShiftsForROL[i], PC1, tablicaPomocnicza);
             subKeys[i] = bitPermutation(subKey, compPBOX);
         }
     }
@@ -205,7 +207,7 @@ public class DES {
             groups[i] =  (byte) (xoredLong >> (42 - i * 6) & 0b00111111);
         }
         //odczytujemy wartości z SBOXów
-        byte valuesSBox[] = new byte[4];
+        byte[] valuesSBox = new byte[4];
         for (int i = 0; i < groups.length; i++){
             int firstBit = groups[i] >> 4 & 0b00000010;
             int lastBit = groups[i] & 1;
