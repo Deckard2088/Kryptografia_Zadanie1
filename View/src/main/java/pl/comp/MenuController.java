@@ -235,7 +235,19 @@ public class MenuController {
     @FXML
     public void encrypt(){
         String key = keyValueTextField.getText();
-        byte[] keyBytes = HexFormat.of().parseHex(key);
+        //sprawdzenie czy klucz na pewno jest w hex
+        if (key == null || !key.matches("[0-9A-Fa-f]{16}")) {
+            System.out.println("Niepoprawny klucz HEX!");
+            return;
+        }
+
+        byte[] keyBytes;
+        try {
+            keyBytes = HexFormat.of().parseHex(key);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Błąd parsowania klucza w HEX!");
+            return;
+        }
         DES des = new DES();
         des.createSubKeysArray(keyBytes);
 
@@ -249,7 +261,19 @@ public class MenuController {
     @FXML
     public void decrypt(){
         String key = keyValueTextField.getText();
-        byte[] keyBytes = HexFormat.of().parseHex(key);
+        //sprawdzenie czy klucz na pewno jest w hex
+        if (key == null || !key.matches("[0-9A-Fa-f]{16}")) {
+            System.out.println("Niepoprawny klucz HEX!");
+            return;
+        }
+
+        byte[] keyBytes;
+        try {
+            keyBytes = HexFormat.of().parseHex(key);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Błąd parsowania klucza w HEX!");
+            return;
+        }
         DES des = new DES();
         des.createSubKeysArray(keyBytes);
 

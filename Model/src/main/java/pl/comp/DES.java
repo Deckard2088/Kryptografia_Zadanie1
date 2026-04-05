@@ -116,15 +116,15 @@ public class DES {
     //bajty zakres od -128 do 127
     //int to 4 bajty; short to 2 bajty, long 8 bajtów (64 bity)
     //Przygotowanie klucza (permutacja + pominięcie bitów parzystości)
-    public byte[] keyConfiguration(String keyFromUser){
+    public byte[] keyConfiguration(byte[] keyFromUser){
         //konwertowanie tekstu na bajty
-        byte[] textBytes = keyFromUser.getBytes(StandardCharsets.UTF_8);
+        //byte[] textBytes = keyFromUser.getBytes(StandardCharsets.UTF_8);
         byte[] finalKey = new byte[8];
 
         //klucz jest 64 bitowy, więc jeśli tekst ma mniej niż 8 bajtów to zostaje dodełniony zerami, a jeśli ma więcej to tylko pobieramy piersze 8 bajtów.
         for (int i = 0; i < 8; i++){
-            if (i < textBytes.length){
-                finalKey[i] = textBytes[i];
+            if (i < keyFromUser.length){
+                finalKey[i] = keyFromUser[i];
             } else {
                 finalKey[i] = 0;
             }
@@ -186,8 +186,8 @@ public class DES {
     //dodać tablicę z comp. p box
     // sprawdzić czy dobrze tworzy ten 48 bitowy podklucz
 
-    public void createSubKeysArray(byte[] configuratedKey){
-        //byte[] configuratedKey = keyConfiguration(key);
+    public void createSubKeysArray(byte[] key){
+        byte[] configuratedKey = keyConfiguration(key);
         //byte[] tablicaPomocnicza = generateSubKey((byte) 0, PC1, configuratedKey);
 
         /*

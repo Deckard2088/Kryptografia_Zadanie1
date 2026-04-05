@@ -18,7 +18,7 @@ public class DESTest {
             System.out.println(binary);
         }
         System.out.println("=======================");
-        byte[] test = des.keyConfiguration(napisTestowy);
+        byte[] test = des.keyConfiguration(bytes);
         for (byte b : test) {
             String binary = String.format("%8s", Integer.toBinaryString(b & 0xFF))
                     .replace(' ', '0');
