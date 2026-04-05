@@ -199,6 +199,10 @@ public class MenuController {
         plaintextTextField.setDisable(true);
         ciphertextTextField.setDisable(true);
 
+        loadButton.setDisable(false);
+        openFileWithCiphertextButton.setDisable(false);
+        openFileWithPlaintextButton.setDisable(false);
+        generateKeyButton.setDisable(true);
         loadKeyFromFileTextField.setDisable(false);
         nameOfFileWithCiphertextTextField.setDisable(false);
         nameOfFileWithPlaintextTextField.setDisable(false);
@@ -210,7 +214,10 @@ public class MenuController {
         keyValueTextField.setDisable(false);
         plaintextTextField.setDisable(false);
         ciphertextTextField.setDisable(false);
-
+        generateKeyButton.setDisable(false);
+        loadButton.setDisable(true);
+        openFileWithCiphertextButton.setDisable(true);
+        openFileWithPlaintextButton.setDisable(true);
         loadKeyFromFileTextField.setDisable(true);
         nameOfFileWithCiphertextTextField.setDisable(true);
         nameOfFileWithPlaintextTextField.setDisable(true);
@@ -220,5 +227,15 @@ public class MenuController {
     public void initialize(){
         radioButtonPlik.setSelected(true);
         radioButtonFileChosen();
+    }
+
+    @FXML
+    public void encrypt(){
+
+    }
+
+    @FXML
+    public void decrypt(){
+
     }
 }
