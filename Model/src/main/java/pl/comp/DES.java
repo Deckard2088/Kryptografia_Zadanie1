@@ -186,8 +186,8 @@ public class DES {
     //dodać tablicę z comp. p box
     // sprawdzić czy dobrze tworzy ten 48 bitowy podklucz
 
-    public void createSubKeysArray(String key){
-        byte[] configuratedKey = keyConfiguration(key);
+    public void createSubKeysArray(byte[] configuratedKey){
+        //byte[] configuratedKey = keyConfiguration(key);
         //byte[] tablicaPomocnicza = generateSubKey((byte) 0, PC1, configuratedKey);
 
         /*

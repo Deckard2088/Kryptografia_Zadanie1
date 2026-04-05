@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Base64;
+import java.util.HexFormat;
 import java.util.ResourceBundle;
 
 public class MenuController {
@@ -234,8 +235,9 @@ public class MenuController {
     @FXML
     public void encrypt(){
         String key = keyValueTextField.getText();
+        byte[] keyBytes = HexFormat.of().parseHex(key);
         DES des = new DES();
-        des.createSubKeysArray(key);
+        des.createSubKeysArray(keyBytes);
 
         String testowyBlok = plaintextTextField.getText();
         byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
@@ -247,13 +249,21 @@ public class MenuController {
     @FXML
     public void decrypt(){
         String key = keyValueTextField.getText();
+        byte[] keyBytes = HexFormat.of().parseHex(key);
         DES des = new DES();
-        des.createSubKeysArray(key);
+        des.createSubKeysArray(keyBytes);
 
         String testowyBlok = ciphertextTextField.getText();
         byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
         byte[] decrypted = des.processBlock(textBytes, true);
         String str = new String(decrypted, StandardCharsets.UTF_8);
         plaintextTextField.setText(str);
+    }
+
+    @FXML
+    public void generateKey(){
+        byte[] generatedKey = Algorithms.generateRandomKey();
+        String key = HexFormat.of().formatHex(generatedKey);
+        keyValueTextField.setText(key);
     }
 }

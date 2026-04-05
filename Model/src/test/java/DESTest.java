@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Test;
+import pl.comp.Algorithms;
 import pl.comp.DES;
 
 import java.nio.charset.StandardCharsets;
@@ -29,7 +30,9 @@ public class DESTest {
     @Test
     public void testMainFunction(){
         DES des = new DES();
-        des.createSubKeysArray("Zbigniew");
+        byte[] klucz = Algorithms.generateRandomKey();
+
+        des.createSubKeysArray(klucz);
         String testowyBlok = "XD12mu67";
         byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
         //byte[] finalKey = new byte[8];
@@ -41,7 +44,8 @@ public class DESTest {
     @Test
     public void testMain2Function() {
         DES des = new DES();
-        des.createSubKeysArray("Zbigniew");
+        byte[] klucz = Algorithms.generateRandomKey();
+        des.createSubKeysArray(klucz);
 
         String testowyBlok = "XD12mu67";
         byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
@@ -55,13 +59,5 @@ public class DESTest {
         byte[] decrypted = des.processBlock(encrypted, true);
         String str = new String(decrypted, StandardCharsets.UTF_8);
         System.out.println(str);
-
-
-
-        // odszyfrowanie (musisz mieć decryptBlock)
-
-
-        // asercja
-        //assertEquals(testowyBlok, decryptedStr);
     }
 }

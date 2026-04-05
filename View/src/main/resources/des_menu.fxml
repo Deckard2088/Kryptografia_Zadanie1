@@ -15,7 +15,8 @@
                   <Font name="Times New Roman" size="18.0" />
                </font>
             </Label>
-            <Button fx:id="generateKeyButton" layoutX="299.0" layoutY="63.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="150.0" text="Generuj klucz">
+            <Button fx:id="generateKeyButton" layoutX="299.0" layoutY="63.0" mnemonicParsing="false" prefHeight="26.0"
+                    prefWidth="150.0" text="Generuj klucz" onAction="#generateKey">
                <font>
                   <Font name="Times New Roman" size="14.0" />
                </font>

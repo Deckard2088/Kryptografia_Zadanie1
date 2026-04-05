@@ -3,8 +3,13 @@ package pl.comp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.SecureRandom;
+import java.util.HexFormat;
+import java.util.Random;
+
 public final class Algorithms {
     private static final Logger logger = LoggerFactory.getLogger(Algorithms.class);
+    private final Random random = new Random();
 
     //prywatny konstruktor, żeby nie tworzyć instacji tej klasy
     private Algorithms() {
@@ -75,5 +80,14 @@ public final class Algorithms {
         return val;
     }
 
-
+    public static byte[] generateRandomKey(){
+        /*
+        byte[] randomKey = new byte[8];
+        new Random().nextBytes(randomKey);
+        return HexFormat.of().formatHex(randomKey);
+         */
+        byte[] randomKey = new byte[8];
+        new SecureRandom().nextBytes(randomKey);
+        return randomKey;
+    }
 }
