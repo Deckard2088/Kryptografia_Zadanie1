@@ -51,6 +51,7 @@ public class DESTest {
         String encryptedBase64 = Base64.getEncoder().encodeToString(encrypted);
         System.out.println("Zaszyfrowany: " + encryptedBase64);
         System.out.println("======");
+
         byte[] decrypted = des.processBlock(encrypted, true);
         String str = new String(decrypted, StandardCharsets.UTF_8);
         System.out.println(str);

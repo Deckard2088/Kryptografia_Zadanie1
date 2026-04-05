@@ -9,7 +9,9 @@ import javafx.scene.control.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Base64;
 import java.util.ResourceBundle;
 
 public class MenuController {
@@ -231,11 +233,27 @@ public class MenuController {
 
     @FXML
     public void encrypt(){
+        String key = keyValueTextField.getText();
+        DES des = new DES();
+        des.createSubKeysArray(key);
 
+        String testowyBlok = plaintextTextField.getText();
+        byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
+        byte[] encrypted = des.processBlock(textBytes, false);
+        String encryptedBase64 = Base64.getEncoder().encodeToString(encrypted);
+        ciphertextTextField.setText(encryptedBase64);
     }
 
     @FXML
     public void decrypt(){
+        String key = keyValueTextField.getText();
+        DES des = new DES();
+        des.createSubKeysArray(key);
 
+        String testowyBlok = ciphertextTextField.getText();
+        byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
+        byte[] decrypted = des.processBlock(textBytes, true);
+        String str = new String(decrypted, StandardCharsets.UTF_8);
+        plaintextTextField.setText(str);
     }
 }
