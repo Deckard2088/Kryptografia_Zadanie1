@@ -42,7 +42,7 @@ public class DES {
             60, 52, 44, 36, 28, 20, 12, 4,
             62, 54, 46, 38, 30, 22, 14, 6,
             64, 56, 48, 40, 32, 24, 16, 8,
-            67, 49, 41, 33, 25, 17, 9, 1,
+            57, 49, 41, 33, 25, 17, 9, 1,
             59, 51, 43, 35, 27, 19, 11, 3,
             61, 53, 45, 37, 29, 21, 13, 5,
             63, 55, 47, 39, 31, 23, 15, 7
@@ -138,6 +138,7 @@ public class DES {
         byte[] permutatedBytetable = new byte[(positions.length + 7) / 8];
         for (int i = 0; i < positions.length; i++){
             //pobieramy z którego bajtu chcemy wyciągnąc bit (np. dla 57. bitu to 6 bajt - przez to że ignorujemy bity parzystości)
+            //& 0xFF
             int byteNumber = ((positions[i] - 1) / 8);
             //pobieramy który bit chcemy wyjąć w ramach tego bajtu (np. dla 57. bitu to 1 bit 7 bajtu)
             int bitNumber = (7 - ((positions[i] - 1) % 8));
