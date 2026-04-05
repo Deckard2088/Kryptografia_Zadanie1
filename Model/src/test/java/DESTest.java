@@ -33,7 +33,7 @@ public class DESTest {
         String testowyBlok = "XD12mu67";
         byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
         //byte[] finalKey = new byte[8];
-        byte[] encrypted = des.encryptBlock(textBytes);
+        byte[] encrypted = des.processBlock(textBytes, false);
         String str = new String(encrypted, StandardCharsets.UTF_8);
         System.out.println(str);
     }
@@ -47,9 +47,15 @@ public class DESTest {
         byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
 
         // szyfrowanie
-        byte[] encrypted = des.encryptBlock(textBytes);
+        byte[] encrypted = des.processBlock(textBytes, false);
         String encryptedBase64 = Base64.getEncoder().encodeToString(encrypted);
         System.out.println("Zaszyfrowany: " + encryptedBase64);
+        System.out.println("======");
+        byte[] decrypted = des.processBlock(encrypted, true);
+        String str = new String(decrypted, StandardCharsets.UTF_8);
+        System.out.println(str);
+
+
 
         // odszyfrowanie (musisz mieć decryptBlock)
 

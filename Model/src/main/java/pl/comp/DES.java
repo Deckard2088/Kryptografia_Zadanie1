@@ -252,35 +252,30 @@ public class DES {
         return bitPermutation(valuesSBox, PBox);
     }
 
-    public byte[] encryptBlock(byte[] block){
+    //funkcja szyfrująca/deszyfrująca blok; jeśli deszyfruje to drugi argument true;
+    public byte[] processBlock(byte[] block, boolean decrypt){
         block = bitPermutation(block, IP);
         byte[] LeftPart = new byte[4];
         byte[] RightPart = new byte[4];
-        /*
+
         for (int i = 0; i < 4; i++){
-            int j = i + 4;
             LeftPart[i] = block[i];
-            RightPart[i] = block[j];
-        }*/
-        System.arraycopy(block, 0, LeftPart,  0, 4);
-        System.arraycopy(block, 4, RightPart, 0, 4);
+            RightPart[i] = block[i+4];
+        }
 
         for (int i = 0; i < 16; i++){
-            byte[] bytesAfterFeistel = feistelFunctions(subKeys[i], RightPart);
+            int keyIndex = decrypt ? (15 - i) : i;
+            byte[] bytesAfterFeistel = feistelFunctions(subKeys[keyIndex], RightPart);
             byte[] newRightSide = Algorithms.xor(bytesAfterFeistel, LeftPart);
             LeftPart = RightPart;
             RightPart = newRightSide;
         }
 
         byte[] encryptedBlock = new byte[8];
-        /*
         for (int i = 0; i < 4; i++){
-            int j = i + 4;
-            encryptedBlock[i] = LeftPart[i];
-            encryptedBlock[j] = RightPart[i];
-        }*/
-        System.arraycopy(RightPart, 0, encryptedBlock, 0, 4); // uwaga: zamiana L i R po ostatniej rundzie
-        System.arraycopy(LeftPart,  0, encryptedBlock, 4, 4);
+            encryptedBlock[i]     = RightPart[i];  // R16 idzie pierwszy
+            encryptedBlock[i + 4] = LeftPart[i];   // L16 idzie drugi
+        }
 
         return bitPermutation(encryptedBlock, IPminus1);
     }
