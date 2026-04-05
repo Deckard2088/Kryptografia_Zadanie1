@@ -11,9 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Base64;
-import java.util.HexFormat;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class MenuController {
 
@@ -160,20 +158,31 @@ public class MenuController {
     public void loadFile(TextInputControl textInput, TextInputControl textFieldWithFileName) {
         logger.info("Rozpoczecie procesu otwierania pliku.");
 
+        char[] literki = {'b', 'h', 's'};
+
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("testtyy");
+        fileChooser.setTitle("LoadFile");
 
         Stage stage = (Stage) loadButton.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
 
         if (file != null) {
             try {
-                String content = Files.readString(file.toPath());
-                textInput.setText(content);
-                logger.info("Wczytano plik: {}", file.getAbsolutePath());
-
+                byte[] fileBytes = Files.readAllBytes(file.toPath());
                 String fileName = file.getName();
                 textFieldWithFileName.setText(fileName);
+                logger.info("Wczytano plik: {}", file.getAbsolutePath());
+
+                String content;
+                if (fileName.endsWith(".txt") || fileName.endsWith(".xml")){
+                    content = new String(fileBytes, StandardCharsets.UTF_8);
+                    //content = Files.readString(file.toPath());
+                } else {
+                    content = new String(fileBytes, StandardCharsets.UTF_8);
+                }
+
+                textInput.setText(content);
+
             } catch (IOException e) {
                 logger.error("Błąd odczytu pliku", e);
             }
