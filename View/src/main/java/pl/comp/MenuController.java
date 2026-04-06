@@ -19,9 +19,6 @@ public class MenuController {
     private ResourceBundle bundle;
     // --- KEY SECTION ---
     @FXML
-    private Label keyLabel;
-
-    @FXML
     private Button generateKeyButton;
 
     @FXML
@@ -31,29 +28,13 @@ public class MenuController {
     private Button loadButton;
 
     @FXML
-    private Label keyValueLabel;
-
-    @FXML
-    private Label generateKeyValueLabel;
-
-    @FXML
     private TextField keyValueTextField;
-
-    @FXML
-    private Label loadKeyFromFileLabel;
 
     @FXML
     private TextField loadKeyFromFileTextField;
 
     @FXML
-    private Label saveKeyToFileLabel;
-
-    @FXML
     private TextField saveKeyToFileTextField;
-
-    // --- ENCRYPTION SECTION ---
-    @FXML
-    private Label encryptionDecryptionLabel;
 
     @FXML
     private Button openFileWithPlaintextButton;
@@ -62,13 +43,7 @@ public class MenuController {
     private TextArea plaintextTextField;
 
     @FXML
-    private Label fileWithPlaintextlabel;
-
-    @FXML
     private TextField nameOfFileWithPlaintextTextField;
-
-    @FXML
-    private Label fileWithCiphertextlabel;
 
     @FXML
     private TextField nameOfFileWithCiphertextTextField;
@@ -110,80 +85,86 @@ public class MenuController {
     @FXML
     private Button saveFileWithCiphertextButton;
 
-    /*
-    Funkcja do zapisywania do pliku; w zależności od tego który przycisk 'zapisz' został kliknięty
-    plik ma nadaną inną nazwę domyślną oraz pobiera dane z innego pola tekstowego
-    TextInputControl to klasa bazowa dla TextArea i TextField
-     */
-    public void saveFile(TextInputControl textInput,TextInputControl userTextInput , String defaultName){
-        logger.info("Rozpoczecie zapisu pliku.");
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("tego typu");
-
-        //jeśli wcześniej nic nie otwierano to domyślna nazwa pliku, w przeciwnym razie domyślna nazwa to nazwa pliku otwieranego
-        if (userTextInput.getText().isEmpty()) {
-            fileChooser.setInitialFileName(defaultName);
-        } else {
-            fileChooser.setInitialFileName(userTextInput.getText());
-        }
-        Stage stage = (Stage) saveButton.getScene().getWindow();
-        File file = fileChooser.showSaveDialog(stage);
-
+    public void saveFileAsText(TextInputControl textInput, TextInputControl userTextInput, String defaultName) {
+        File file = showSaveDialog(userTextInput, defaultName);
         if (file != null) {
             try {
-                //Files.writeString(file.toPath(), saveKeyToFileTextField.getText());
-                Files.writeString(file.toPath(), textInput.getText());
+                Files.writeString(file.toPath(), textInput.getText(), StandardCharsets.UTF_8);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Błąd zapisu pliku", e);
+            }
+        }
+    }
+
+    public void saveFileAsBytes(byte[] bytes, TextInputControl userTextInput, String defaultName) {
+        File file = showSaveDialog(userTextInput, defaultName);
+        if (file != null) {
+            try {
+                Files.write(file.toPath(), bytes);
+            } catch (IOException e) {
+                logger.error("Błąd zapisu pliku", e);
+            }
+        }
+    }
+
+    private File showSaveDialog(TextInputControl userTextInput, String defaultName) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Zapisz plik");
+        fileChooser.setInitialFileName(
+                userTextInput.getText().isEmpty() ? defaultName : userTextInput.getText()
+        );
+        Stage stage = (Stage) saveButton.getScene().getWindow();
+        return fileChooser.showSaveDialog(stage);
+    }
+
+    @FXML
+    public void saveFileKey(){
+        saveFileAsText(keyValueTextField, saveKeyToFileTextField,"klucz.txt");
+    }
+
+    @FXML
+    public void saveFileCiphertext(){
+        byte[] encryptedBytes = Base64.getDecoder().decode(ciphertextTextField.getText());
+        saveFileAsBytes(encryptedBytes, nameOfFileWithCiphertextTextFieldEnd, "szyfrogram.txt");
+    }
+
+    @FXML
+    public void saveFilePlaintext(){
+        String nameOfFile = nameOfFileWithPlaintextTextField.getText();
+        if (radioButtonOkno.isSelected() || nameOfFile.endsWith(".txt")) {
+            saveFileAsText(plaintextTextField, nameOfFileWithPlaintextTextField, "tekst_jawny.txt");
+        } else {
+            // binarny - dekoduj Base64 z TextArea → surowe bajty
+            byte[] plaintextBytes = Base64.getDecoder().decode(plaintextTextField.getText());
+            saveFileAsBytes(plaintextBytes, nameOfFileWithPlaintextTextField, "tekst_jawny");
+        }
+    }
+
+    @FXML
+    public void loadFileKey(){
+        File file = showOpenDialog();
+        if (file != null) {
+            try {
+                byte[] keyBytes = Files.readAllBytes(file.toPath());
+                keyValueTextField.setText(HexFormat.of().formatHex(keyBytes));
+                loadKeyFromFileTextField.setText(file.getName());
+                logger.info("Wczytano klucz: {}", file.getAbsolutePath());
+            } catch (IOException e) {
+                logger.error("Błąd odczytu klucza", e);
             }
         }
     }
 
     @FXML
-    public void saveFileKey(){
-        saveFile(keyValueTextField, saveKeyToFileTextField,"klucz.txt");
-    }
-
-    @FXML
-    public void saveFileCiphertext(){
-        saveFile(ciphertextTextField, nameOfFileWithCiphertextTextFieldEnd, "szyfrogram.txt");
-    }
-
-    @FXML
-    public void saveFilePlaintext(){
-        saveFile(plaintextTextField, nameOfFileWithPlaintextTextFieldEnd, "tekst jawny.txt");
-    }
-
-    public void loadFile(TextInputControl textInput, TextInputControl textFieldWithFileName) {
-        logger.info("Rozpoczecie procesu otwierania pliku.");
-
-        char[] literki = {'b', 'h', 's'};
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("LoadFile");
-
-        Stage stage = (Stage) loadButton.getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
-
+    public void loadFileCiphertext(){
+        File file = showOpenDialog();
         if (file != null) {
             try {
                 byte[] fileBytes = Files.readAllBytes(file.toPath());
-                String fileName = file.getName();
-                textFieldWithFileName.setText(fileName);
-                logger.info("Wczytano plik: {}", file.getAbsolutePath());
-
-                String content;
-                //jeśli wczytano plik tekstowy to wyświetl jego zawartość w UTF-8, w przeciwnym razie - base64
-                if (fileName.endsWith(".txt") || fileName.endsWith(".xml")){
-                    content = new String(fileBytes, StandardCharsets.UTF_8);
-                    //content = Files.readString(file.toPath());
-                } else {
-                    content = Base64.getEncoder().encodeToString(fileBytes);
-                }
-
-                textInput.setText(content);
-
+                nameOfFileWithCiphertextTextField.setText(file.getName());
+                logger.info("Wczytano szyfrogram: {}", file.getAbsolutePath());
+                // szyfrogram zawsze jako Base64 w TextArea
+                ciphertextTextField.setText(Base64.getEncoder().encodeToString(fileBytes));
             } catch (IOException e) {
                 logger.error("Błąd odczytu pliku", e);
             }
@@ -191,18 +172,31 @@ public class MenuController {
     }
 
     @FXML
-    public void loadFileKey(){
-        loadFile(keyValueTextField, loadKeyFromFileTextField);
-    }
-
-    @FXML
-    public void loadFileCiphertext(){
-        loadFile(ciphertextTextField, nameOfFileWithCiphertextTextField);
-    }
-
-    @FXML
     public void loadFilePlaintext(){
-        loadFile(plaintextTextField, nameOfFileWithPlaintextTextField);
+        File file = showOpenDialog();
+        if (file != null) {
+            try {
+                byte[] fileBytes = Files.readAllBytes(file.toPath());
+                String fileName = file.getName();
+                nameOfFileWithPlaintextTextField.setText(fileName);
+                logger.info("Wczytano plik: {}", file.getAbsolutePath());
+
+                if (fileName.endsWith(".txt") || fileName.endsWith(".xml")) {
+                    plaintextTextField.setText(new String(fileBytes, StandardCharsets.UTF_8));
+                } else {
+                    plaintextTextField.setText(Base64.getEncoder().encodeToString(fileBytes));
+                }
+            } catch (IOException e) {
+                logger.error("Błąd odczytu pliku", e);
+            }
+        }
+    }
+
+    private File showOpenDialog() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Otwórz plik");
+        Stage stage = (Stage) loadButton.getScene().getWindow();
+        return fileChooser.showOpenDialog(stage);
     }
 
     @FXML
@@ -245,7 +239,7 @@ public class MenuController {
     @FXML
     public void encrypt(){
         String key = keyValueTextField.getText();
-        //sprawdzenie czy klucz na pewno jest w hex
+        //zabezpieczenie przed przypadkiem, gdy klucz nie jest w HEX
         if (key == null || !key.matches("[0-9A-Fa-f]{16}")) {
             System.out.println("Niepoprawny klucz HEX!");
             return;
@@ -258,11 +252,23 @@ public class MenuController {
             System.out.println("Błąd parsowania klucza w HEX!");
             return;
         }
+
+        //tworzymy podklucze w oparciu o bajty klucza
         DES des = new DES();
         des.createSubKeysArray(keyBytes);
 
-        String testowyBlok = plaintextTextField.getText();
-        byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
+        //pobieramy tekst jawny jako Sting z text area
+        String plaintext = plaintextTextField.getText();
+        //przekształcamy String na bajty: jeśli wcześniej pobrano plik .txt lub wybrano opcję 'Okno' kodowanie jest uznane za UTF-8
+        //w przeciwnym razie - base64
+        byte[] textBytes;
+        String nameOfOpenedFile = nameOfFileWithPlaintextTextField.getText();
+        if (radioButtonOkno.isSelected() || nameOfOpenedFile.endsWith(".txt")) {
+            textBytes = plaintext.getBytes(StandardCharsets.UTF_8);
+        } else {
+            textBytes = Base64.getDecoder().decode(plaintext);
+        }
+        //szyfrujemy, a następnie wypisujemy w drugim textArea jako base64 (ZAWSZE)
         byte[] encrypted = des.encryptBlocks(textBytes);
         String encryptedBase64 = Base64.getEncoder().encodeToString(encrypted);
         ciphertextTextField.setText(encryptedBase64);
@@ -271,7 +277,7 @@ public class MenuController {
     @FXML
     public void decrypt(){
         String key = keyValueTextField.getText();
-        //sprawdzenie czy klucz na pewno jest w hex
+        //zabezpieczenie przed przypadkiem, gdy klucz nie jest w HEX
         if (key == null || !key.matches("[0-9A-Fa-f]{16}")) {
             System.out.println("Niepoprawny klucz HEX!");
             return;
@@ -284,19 +290,29 @@ public class MenuController {
             System.out.println("Błąd parsowania klucza w HEX!");
             return;
         }
+
+        //tworzymy podklucze w oparciu o bajty klucza
         DES des = new DES();
         des.createSubKeysArray(keyBytes);
-
-        //String testowyBlok = ciphertextTextField.getText();
-        //byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
+        //pobieramy zawartość textArea z kodowaniem base64
         byte[] textBytes = Base64.getDecoder().decode(ciphertextTextField.getText());
         byte[] decrypted = des.decryptBlocks(textBytes);
-        String str = new String(decrypted, StandardCharsets.UTF_8);
-        plaintextTextField.setText(str);
+        //zapisujemy odszyfrowany tekst w pierwszym textArea z kodowaniem UTF-8 (jeśli wcześniej był otwierany plik .txt
+        //lub jeśli wybrano opcje 'Okno', w przeciwnym razie base64
+        String plaintext;
+        String nameOfOpenedFile = nameOfFileWithPlaintextTextField.getText();
+        if (radioButtonOkno.isSelected() || nameOfOpenedFile.endsWith(".txt")) {
+            plaintext = new String(decrypted, StandardCharsets.UTF_8);
+        } else {
+            //textBytes = Base64.getDecoder().decode(plaintext);
+            plaintext = Base64.getEncoder().encodeToString(decrypted);
+        }
+        plaintextTextField.setText(plaintext);
     }
 
     @FXML
     public void generateKey(){
+        //generujemy klucz w sposób losowy
         byte[] generatedKey = Algorithms.generateRandomKey();
         String key = HexFormat.of().formatHex(generatedKey);
         keyValueTextField.setText(key);

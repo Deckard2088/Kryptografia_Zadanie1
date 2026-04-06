@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 public class DES {
     private static final Logger logger = LoggerFactory.getLogger(DES.class);
 
-    //DANE TABELARYCZNE SĄ Z WIKIPEDII POZDRO BYQ
-    //możnaby nazwy zmienić bo nwm czy później z czymś kolidować nie będą
     private static final byte[] PC1 = {
             57, 49, 41, 33, 25, 17, 9, 1,
             58, 50, 42, 34, 26, 18, 10, 2,
@@ -116,9 +114,6 @@ public class DES {
     //tablica z podkluczami
     private byte[][] subKeys = new byte[16][];
 
-    //bajty zakres od -128 do 127
-    //int to 4 bajty; short to 2 bajty, long 8 bajtów (64 bity)
-    //Przygotowanie klucza (permutacja + pominięcie bitów parzystości)
     public byte[] keyConfiguration(byte[] keyFromUser){
         //konwertowanie tekstu na bajty
         //byte[] textBytes = keyFromUser.getBytes(StandardCharsets.UTF_8);
@@ -156,14 +151,6 @@ public class DES {
 
     public void createSubKeysArray(byte[] key){
         byte[] configuratedKey = keyConfiguration(key);
-        //byte[] tablicaPomocnicza = generateSubKey((byte) 0, PC1, configuratedKey);
-
-        /*
-        for (int i = 0; i < subKeys.length; i++){
-            byte[] subKey = generateSubKey(numberOfShiftsForROL[i], PC1, tablicaPomocnicza);
-            subKeys[i] = bitPermutation(subKey, compPBOX);
-        }
-        */
         int leftSide = Algorithms.separateByte(configuratedKey, 0, 28);
         int rightSide = Algorithms.separateByte(configuratedKey, 28, 28);
 
@@ -190,18 +177,6 @@ public class DES {
         //odczytujemy wartości z SBOXów
         byte[] valuesSBox = new byte[4];
         for (int i = 0; i < groups.length; i++){
-            /*
-            int firstBit = ((groups[i] >> 5) << 1) & 0b00000010;
-            int lastBit = groups[i] & 1;
-            int row = firstBit | lastBit;
-            int column = groups[i] >> 1 & 0b00011110;
-            int sBox = SBox[i][16 * row + column] & 0x0F;
-            //bajty w tej tablicy są w połowie puste, a do dalszej operacji potrzebne są 32 bity więc 'kompresujemy'
-            if (i % 2 == 1){
-                valuesSBox[i] = (byte) (valuesSBox[i] | sBox);
-            } else {
-                valuesSBox[i] = (byte) (sBox << 4);
-            }*/
             int firstBit = (groups[i] >> 5) & 1;       // bit 5 (MSB grupy)
             int lastBit  =  groups[i] & 1;              // bit 0 (LSB grupy)
             int row      = (firstBit << 1) | lastBit;   // 0–3
