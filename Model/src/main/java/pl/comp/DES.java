@@ -283,6 +283,29 @@ public class DES {
         return bitPermutation(encryptedBlock, IPminus1);
     }
 
+    public List<byte[]> encryptBlocks(byte[] input){
+        List<byte[]> blocks = createBlocks(input, 8);
+        List<byte[]> encryptedBlocks = new ArrayList<>();
+
+        for (byte[] block: blocks){
+            byte[] encryptedBlock = processBlock(block, false);
+            encryptedBlocks.add(encryptedBlock);
+        }
+        return encryptedBlocks;
+    }
+
+    public List<byte[]> decryptBlocks(byte[] input){
+        List<byte[]> blocks = createBlocks(input, 8);
+        List<byte[]> decryptedBlocks = new ArrayList<>();
+
+        for (byte[] block: blocks){
+            byte[] decryptedBlock = processBlock(block, true);
+            decryptedBlocks.add(decryptedBlock);
+        }
+
+        return decryptedBlocks;
+    }
+
     public List<byte[]> createBlocks(byte[] input, int blockSize){
         int numberOfBytes = input.length;
         List<byte[]> blocks = new ArrayList<>();
