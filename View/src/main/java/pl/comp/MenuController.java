@@ -263,7 +263,7 @@ public class MenuController {
 
         String testowyBlok = plaintextTextField.getText();
         byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
-        byte[] encrypted = des.processBlock(textBytes, false);
+        byte[] encrypted = des.encryptBlocks(textBytes);
         String encryptedBase64 = Base64.getEncoder().encodeToString(encrypted);
         ciphertextTextField.setText(encryptedBase64);
     }
@@ -287,9 +287,10 @@ public class MenuController {
         DES des = new DES();
         des.createSubKeysArray(keyBytes);
 
-        String testowyBlok = ciphertextTextField.getText();
-        byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
-        byte[] decrypted = des.processBlock(textBytes, true);
+        //String testowyBlok = ciphertextTextField.getText();
+        //byte[] textBytes = testowyBlok.getBytes(StandardCharsets.UTF_8);
+        byte[] textBytes = Base64.getDecoder().decode(ciphertextTextField.getText());
+        byte[] decrypted = des.decryptBlocks(textBytes);
         String str = new String(decrypted, StandardCharsets.UTF_8);
         plaintextTextField.setText(str);
     }

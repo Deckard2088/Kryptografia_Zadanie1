@@ -154,41 +154,6 @@ public class DES {
         return permutatedBytetable;
     }
 
-    //same indeksy czyli de facto PC1 będzie drugim argumentem
-    public byte[] generateSubKey(byte numberOfRepeats, byte[] keyBitsIndexes, byte[] key){
-        if (keyBitsIndexes.length != 56){
-            logger.info("Podany klucz nie ma 56 bitów");
-            return null;
-        }
-
-        //dzielimy tablice na pół
-        byte[] LeftPart = new byte[28];
-        byte[] RightPart = new byte[28];
-        for (int i = 0; i < 28; i++){
-            int j = i + 28;
-            LeftPart[i] = keyBitsIndexes[i];
-            RightPart[i] = keyBitsIndexes[j];
-        }
-
-        for (int i = 0; i < numberOfRepeats; i++) {
-            Algorithms.ROL(LeftPart);
-            Algorithms.ROL(RightPart);
-        }
-
-        byte[] subKey = new byte[56];
-        for (int i = 0; i < 28; i++){
-            int j = i + 28;
-            subKey[i] = LeftPart[i];
-            subKey[j] = RightPart[i];
-        }
-
-        return bitPermutation(key, subKey);
-    }
-    //w takiej formie to najlepiej chyba będzie zrobić że wynik tej funkcji później będzie jej argumentem przy generowaniu kolejnych kluczy
-    //poprawić tę funckję od permutacji
-    //dodać tablicę z comp. p box
-    // sprawdzić czy dobrze tworzy ten 48 bitowy podklucz
-
     public void createSubKeysArray(byte[] key){
         byte[] configuratedKey = keyConfiguration(key);
         //byte[] tablicaPomocnicza = generateSubKey((byte) 0, PC1, configuratedKey);
@@ -284,7 +249,10 @@ public class DES {
     }
 
     public byte[] encryptBlocks(byte[] input){
-        List<byte[]> blocks = createBlocks(input, 8);
+        logger.info("rozpoczynam szyfrowanie...");
+        byte[] padded = addPadding(input, 8);
+
+        List<byte[]> blocks = createBlocks(padded, 8);
         List<byte[]> encryptedBlocks = new ArrayList<>();
 
         for (byte[] block: blocks){
@@ -298,39 +266,26 @@ public class DES {
         List<byte[]> blocks = createBlocks(input, 8);
         List<byte[]> decryptedBlocks = new ArrayList<>();
 
+        logger.info("rozpoczynam deszyfrowanie");
         for (byte[] block: blocks){
             byte[] decryptedBlock = processBlock(block, true);
             decryptedBlocks.add(decryptedBlock);
         }
 
+        logger.info("usuwam padding");
         byte[] joinedBytesWithPadding = Algorithms.joinBytesFromList(decryptedBlocks, 8);
         return removePadding(joinedBytesWithPadding);
     }
 
     public List<byte[]> createBlocks(byte[] input, int blockSize){
-        int numberOfBytes = input.length;
         List<byte[]> blocks = new ArrayList<>();
-        //liczba nieużytych bajtów, użyte do uzupełnienia bloku
-        int padding = blockSize - (input.length % blockSize);
-        if (padding == 0) {
-            padding = blockSize;
-        }
-        //tablica z paddingiem
-        byte[] tableWithPadding = new byte[input.length + padding];
-        //przekopiowanie wartości z input do nowej tablicy
-        System.arraycopy(input, 0, tableWithPadding, 0, blockSize);
-        //wstawienie paddingu
-        for (int i = numberOfBytes; i < tableWithPadding.length; i++){
-            tableWithPadding[i] = (byte) padding;
-        }
 
-        //dzielenie na bloki tablicy z paddingiem
-        for (int i = 0; i < tableWithPadding.length; i += blockSize){
+        for (int i = 0; i < input.length; i += blockSize) {
             byte[] block = new byte[blockSize];
-            //arrayCopy to to samo co kopiowanie przez pętlę for
             System.arraycopy(input, i, block, 0, blockSize);
             blocks.add(block);
         }
+
         return blocks;
     }
 
@@ -350,5 +305,22 @@ public class DES {
         byte[] removedPadding = new byte[input.length - padding];
         System.arraycopy(input, 0, removedPadding, 0, removedPadding.length);
         return removedPadding;
+    }
+
+    public static byte[] addPadding(byte[] input, int blockSize) {
+        int padding = blockSize - (input.length % blockSize);
+        if (padding == 0) {
+            padding = blockSize;
+        }
+
+        byte[] padded = new byte[input.length + padding];
+
+        System.arraycopy(input, 0, padded, 0, input.length);
+
+        for (int i = input.length; i < padded.length; i++) {
+            padded[i] = (byte) padding;
+        }
+
+        return padded;
     }
 }
