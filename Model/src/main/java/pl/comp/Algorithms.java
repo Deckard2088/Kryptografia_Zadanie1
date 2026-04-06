@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.security.SecureRandom;
 import java.util.HexFormat;
+import java.util.List;
 import java.util.Random;
 
 public final class Algorithms {
@@ -89,5 +90,16 @@ public final class Algorithms {
         byte[] randomKey = new byte[8];
         new SecureRandom().nextBytes(randomKey);
         return randomKey;
+    }
+
+    public static byte[] joinBytesFromList(List<byte[]> blocks, int blockSize){
+        byte[] joinedBytes = new byte[blocks.size()*blockSize];
+
+        int firstBytePos = 0;
+        for (byte[] block : blocks) {
+            System.arraycopy(block, 0, joinedBytes, firstBytePos, blockSize);
+            firstBytePos += blockSize;
+        }
+        return joinedBytes;
     }
 }

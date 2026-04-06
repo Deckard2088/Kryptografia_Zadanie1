@@ -283,7 +283,7 @@ public class DES {
         return bitPermutation(encryptedBlock, IPminus1);
     }
 
-    public List<byte[]> encryptBlocks(byte[] input){
+    public byte[] encryptBlocks(byte[] input){
         List<byte[]> blocks = createBlocks(input, 8);
         List<byte[]> encryptedBlocks = new ArrayList<>();
 
@@ -291,10 +291,10 @@ public class DES {
             byte[] encryptedBlock = processBlock(block, false);
             encryptedBlocks.add(encryptedBlock);
         }
-        return encryptedBlocks;
+        return Algorithms.joinBytesFromList(encryptedBlocks, 8);
     }
 
-    public List<byte[]> decryptBlocks(byte[] input){
+    public byte[] decryptBlocks(byte[] input){
         List<byte[]> blocks = createBlocks(input, 8);
         List<byte[]> decryptedBlocks = new ArrayList<>();
 
@@ -303,7 +303,8 @@ public class DES {
             decryptedBlocks.add(decryptedBlock);
         }
 
-        return decryptedBlocks;
+        byte[] joinedBytesWithPadding = Algorithms.joinBytesFromList(decryptedBlocks, 8);
+        return removePadding(joinedBytesWithPadding);
     }
 
     public List<byte[]> createBlocks(byte[] input, int blockSize){
@@ -331,5 +332,23 @@ public class DES {
             blocks.add(block);
         }
         return blocks;
+    }
+
+    public byte[] removePadding(byte[] input){
+        //pobieramy ostatni bajt (jest w nim informacja ile bajtów było niewykorzystanych
+        int padding = input[input.length - 1] & 0xFF;
+        //sprawdzamy czy padding jest poprawny
+        if (padding < 0 || padding > 8){
+            throw new IllegalArgumentException("Niepoprawny padding (spoza zakresu [0;8])");
+        }
+        //sprawdzamy czy ilość niewykorzystanych bajtów jest taka sama jak przetrzymywana w nich liczba
+        for (int i = input.length - padding; i < input.length; i++) {
+            if ((input[i] & 0xFF) != padding) {
+                throw new IllegalArgumentException("Uszkodzony padding");
+            }
+        }
+        byte[] removedPadding = new byte[input.length - padding];
+        System.arraycopy(input, 0, removedPadding, 0, removedPadding.length);
+        return removedPadding;
     }
 }
