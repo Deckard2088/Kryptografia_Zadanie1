@@ -119,24 +119,38 @@ public class MenuController {
 
     @FXML
     public void saveFileKey(){
-        saveFileAsText(keyValueTextField, saveKeyToFileTextField,"klucz.txt");
+        String nameOfSavedFile = saveKeyToFileTextField.getText();
+        if (nameOfSavedFile.isEmpty()){
+            nameOfSavedFile = "klucz.txt";
+        }
+        saveFileAsText(keyValueTextField, saveKeyToFileTextField, nameOfSavedFile);
     }
 
     @FXML
     public void saveFileCiphertext(){
+        String nameOfSavedFile = nameOfFileWithCiphertextTextFieldEnd.getText();
+        if (nameOfSavedFile.isEmpty()){
+            nameOfSavedFile = "szyfrogram.txt";
+        }
         byte[] encryptedBytes = Base64.getDecoder().decode(ciphertextTextField.getText());
-        saveFileAsBytes(encryptedBytes, nameOfFileWithCiphertextTextFieldEnd, "szyfrogram.txt");
+        saveFileAsBytes(encryptedBytes, nameOfFileWithCiphertextTextFieldEnd, nameOfSavedFile);
     }
 
     @FXML
     public void saveFilePlaintext(){
         String nameOfFile = nameOfFileWithPlaintextTextField.getText();
+        String nameOfSavedFile = nameOfFileWithPlaintextTextFieldEnd.getText();
         if (radioButtonOkno.isSelected() || nameOfFile.endsWith(".txt")) {
-            saveFileAsText(plaintextTextField, nameOfFileWithPlaintextTextField, "tekst_jawny.txt");
+            if (nameOfSavedFile.isEmpty()){
+                nameOfSavedFile = "tekst_jawny.txt";
+            }
+            saveFileAsText(plaintextTextField, nameOfFileWithPlaintextTextField, nameOfSavedFile);
         } else {
-            // binarny - dekoduj Base64 z TextArea → surowe bajty
+            if (nameOfSavedFile.isEmpty()){
+                nameOfSavedFile = "tekst_jawny";
+            }
             byte[] plaintextBytes = Base64.getDecoder().decode(plaintextTextField.getText());
-            saveFileAsBytes(plaintextBytes, nameOfFileWithPlaintextTextField, "tekst_jawny");
+            saveFileAsBytes(plaintextBytes, nameOfFileWithPlaintextTextField, nameOfSavedFile);
         }
     }
 
@@ -145,8 +159,9 @@ public class MenuController {
         File file = showOpenDialog();
         if (file != null) {
             try {
-                byte[] keyBytes = Files.readAllBytes(file.toPath());
-                keyValueTextField.setText(HexFormat.of().formatHex(keyBytes));
+                // wczytujemy string hex bezpośrednio
+                String hexKey = Files.readString(file.toPath(), StandardCharsets.UTF_8).trim();
+                keyValueTextField.setText(hexKey);
                 loadKeyFromFileTextField.setText(file.getName());
                 logger.info("Wczytano klucz: {}", file.getAbsolutePath());
             } catch (IOException e) {

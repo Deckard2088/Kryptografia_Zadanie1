@@ -24,6 +24,7 @@ public final class Algorithms {
         byteTable[byteTable.length - 1] = temp;
     }
 
+    //Operacja ROL w wersji bitowej
     public static int ROLbits(int value, int shifts){
         //w int value trzymamy 28 bitów, czyli pierwsze 4 bity od lewej to 0
         int mask = 0x0FFFFFFF;
@@ -34,6 +35,7 @@ public final class Algorithms {
         return value;
     }
 
+    //Funkcja odpowiedzialna za rozdzielenie tablicy bajtów (wykorzystana przy podziale 56 bitowego klucza na dwie 28 bitowe połowy)
     public static int separateByte(byte[] tab, int firstBit, int amountOfBits){
         int value = 0;
         for (int i = 0; i < amountOfBits; i++){
@@ -45,6 +47,7 @@ public final class Algorithms {
         return value;
     }
 
+    //Funkcja scalająca z powrotem dwie połówki klucza (int zawierają 28 bitowe połówki z których powstaje 56 bitowy klucz)
     public static byte[] mergeSides(int left, int right){
         long combined = ((long) left << 28) | (right & 0x0FFFFFFFL);
         byte[] result = new byte[7];
@@ -55,6 +58,7 @@ public final class Algorithms {
         return result;
     }
 
+    //xorowanie dwóch tablic bajtów
     public static byte[] xor(byte[] firstTable, byte[] secondTable){
         if (firstTable.length != secondTable.length){
             logger.info("Błąd: Tablice nie są tej samej długości, operacja XOR zakończona niepowodzeniem");
@@ -68,7 +72,7 @@ public final class Algorithms {
         return finalTable;
     }
 
-    //zgadza sie, podjebałem ze StackOverflow ale tylko głupi by nie skorzystał. Trzeba było pilnować.
+    //Funkcja pomocncicza konwertująca tablicę bajtów na long (dla wygody)
     public static final long toLong (byte[] byteArray, int offset, int len)
     {
         long val = 0;
@@ -81,6 +85,7 @@ public final class Algorithms {
         return val;
     }
 
+    //Funkcja generująca klucz w sposób losowy
     public static byte[] generateRandomKey(){
         /*
         byte[] randomKey = new byte[8];
@@ -92,6 +97,7 @@ public final class Algorithms {
         return randomKey;
     }
 
+    //Funkcja która przetwarza listę tablic bajtów na jedną dłuuugą tablicę bajtów
     public static byte[] joinBytesFromList(List<byte[]> blocks, int blockSize){
         byte[] joinedBytes = new byte[blocks.size()*blockSize];
 

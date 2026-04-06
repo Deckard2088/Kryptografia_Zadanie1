@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 public class DES {
     private static final Logger logger = LoggerFactory.getLogger(DES.class);
 
+    //Permutacja klucza 1
     private static final byte[] PC1 = {
             57, 49, 41, 33, 25, 17, 9, 1,
             58, 50, 42, 34, 26, 18, 10, 2,
@@ -20,7 +21,7 @@ public class DES {
             29, 21, 13, 5, 28, 20, 12, 4
     };
 
-    //PC-2 ?
+    //Permutacja klucza 2 (PC-2)
     private static final byte[] compPBOX = {
             14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10,
             23, 19, 12, 4, 26, 8, 16, 7, 27, 20, 13, 2,
@@ -28,16 +29,18 @@ public class DES {
             44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32
     };
 
-    //to jest to do feistela ostatni
+    //Permutacja P-bloku (do funkcji Feistela)
     private static final byte[] PBox = {
             16, 7, 20, 21, 29, 12, 28, 17, 1, 15, 23, 26, 5, 18, 31, 10,
             2, 8, 24, 14, 32, 27, 3, 9, 19, 13, 30, 6, 22, 11, 4, 25
     };
 
+    //Przesunięcia klucza
     private static final byte[] numberOfShiftsForROL = {
             1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1
     };
 
+    //Permutacja początkowa
     private static final byte[] IP = {
             58, 50, 42, 34, 26, 18, 10, 2,
             60, 52, 44, 36, 28, 20, 12, 4,
@@ -49,6 +52,7 @@ public class DES {
             63, 55, 47, 39, 31, 23, 15, 7
     };
 
+    //Permutacja końcowa
     private static final byte[] IPminus1 = {
             40, 8, 48, 16, 56, 24, 64, 32,
             39, 7, 47, 15, 55, 23, 63, 31,
@@ -68,6 +72,7 @@ public class DES {
             24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32, 1
     };
 
+    //S-bloki
     private static final byte[][] SBox = {
             //S1
             {14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7,
@@ -114,12 +119,12 @@ public class DES {
     //tablica z podkluczami
     private byte[][] subKeys = new byte[16][];
 
+    //Konfiguracja początkowa klucza (skrócenie/uzupełnienie + permutacja początkowa)
     public byte[] keyConfiguration(byte[] keyFromUser){
-        //konwertowanie tekstu na bajty
-        //byte[] textBytes = keyFromUser.getBytes(StandardCharsets.UTF_8);
         byte[] finalKey = new byte[8];
 
-        //klucz jest 64 bitowy, więc jeśli tekst ma mniej niż 8 bajtów to zostaje dodełniony zerami, a jeśli ma więcej to tylko pobieramy piersze 8 bajtów.
+        //klucz jest 64 bitowy, więc jeśli tekst ma mniej niż 8 bajtów to zostaje dodełniony zerami,
+        // a jeśli ma więcej to tylko pobieramy piersze 8 bajtów.
         for (int i = 0; i < 8; i++){
             if (i < keyFromUser.length){
                 finalKey[i] = keyFromUser[i];
@@ -130,6 +135,7 @@ public class DES {
         return bitPermutation(finalKey, PC1);
     }
 
+    //funkcja przestawia bity w tabeli bajtów w oparciu o tablicę z numerami owych bitów
     public byte[] bitPermutation(byte[] byteTable, byte[] positions){
         //funckja ma działa uniwersalnie i stąd to oblicznie w długości tablicy permutatedBytetable
         //dla 64 bitowego wejścia dostajemy 56 bitowe wyjście
@@ -149,12 +155,12 @@ public class DES {
         return permutatedBytetable;
     }
 
+    //Funkcja tworząca podklucze i wstawiające je do tablicy subKeys
     public void createSubKeysArray(byte[] key){
         byte[] configuratedKey = keyConfiguration(key);
         int leftSide = Algorithms.separateByte(configuratedKey, 0, 28);
         int rightSide = Algorithms.separateByte(configuratedKey, 28, 28);
-
-        //16 rund
+        //16 kluczy
         for (int i = 0; i < 16; i++){
             leftSide = Algorithms.ROLbits(leftSide, numberOfShiftsForROL[i]);
             rightSide = Algorithms.ROLbits(rightSide, numberOfShiftsForROL[i]);
@@ -163,6 +169,7 @@ public class DES {
         }
     }
 
+    //Funkcje Feistela: permutacja, xor, podział na grupy 6 bitowe i odczytywanie z S-boxów
     public byte[] feistelFunctions(byte[] subKey, byte[] rightSide){
         //permutacja roszerzona (48 bitów)
         byte[] permutatedRightSide = bitPermutation(rightSide, E);
@@ -177,18 +184,18 @@ public class DES {
         //odczytujemy wartości z SBOXów
         byte[] valuesSBox = new byte[4];
         for (int i = 0; i < groups.length; i++){
-            int firstBit = (groups[i] >> 5) & 1;       // bit 5 (MSB grupy)
-            int lastBit  =  groups[i] & 1;              // bit 0 (LSB grupy)
-            int row      = (firstBit << 1) | lastBit;   // 0–3
-            int column   = (groups[i] >> 1) & 0x0F;    // bity 1–4, wartość 0–15
+            int firstBit = (groups[i] >> 5) & 1;
+            int lastBit  =  groups[i] & 1;
+            int row      = (firstBit << 1) | lastBit;
+            int column   = (groups[i] >> 1) & 0x0F;
 
-            int sBoxVal  = SBox[i][16 * row + column] & 0x0F; // 4 bity
+            int sBoxVal  = SBox[i][16 * row + column] & 0x0F;
 
             int idx = i / 2;
             if (i % 2 == 0) {
-                valuesSBox[idx] = (byte) (sBoxVal << 4);              // starsze 4 bity
+                valuesSBox[idx] = (byte) (sBoxVal << 4);
             } else {
-                valuesSBox[idx] = (byte) (valuesSBox[idx] | sBoxVal); // młodsze 4 bity
+                valuesSBox[idx] = (byte) (valuesSBox[idx] | sBoxVal);
             }
         }
 
@@ -223,6 +230,7 @@ public class DES {
         return bitPermutation(encryptedBlock, IPminus1);
     }
 
+    //Funkcja szyfrująca wszystkie bloki
     public byte[] encryptBlocks(byte[] input){
         logger.info("rozpoczynam szyfrowanie...");
         byte[] padded = addPadding(input, 8);
@@ -237,6 +245,7 @@ public class DES {
         return Algorithms.joinBytesFromList(encryptedBlocks, 8);
     }
 
+    //Funkcja deszyfrująca wszystkie bloki
     public byte[] decryptBlocks(byte[] input){
         List<byte[]> blocks = createBlocks(input, 8);
         List<byte[]> decryptedBlocks = new ArrayList<>();
@@ -252,6 +261,8 @@ public class DES {
         return removePadding(joinedBytesWithPadding);
     }
 
+    //Funkcja dzieląca wprowadzony tekst (tablice bajtów) na grupy po 8 bajtów (64 bity)
+    //Przed jej użyciem należy wcześniej wywołać addPadding, gdyż funkcja działa tylko gdy ilość bajtów jest wielokrotnością 8
     public List<byte[]> createBlocks(byte[] input, int blockSize){
         List<byte[]> blocks = new ArrayList<>();
 
@@ -264,6 +275,7 @@ public class DES {
         return blocks;
     }
 
+    //Funkcja usuwająca padding z tablicy bajtów (potrzebne przy deszyfrowaniu)
     public byte[] removePadding(byte[] input){
         //pobieramy ostatni bajt (jest w nim informacja ile bajtów było niewykorzystanych
         int padding = input[input.length - 1] & 0xFF;
@@ -282,6 +294,8 @@ public class DES {
         return removedPadding;
     }
 
+    //Funkcja dodająca Padding do początkowego tekstu (tablicy bajtów), aby ilość bajtów była wielokrotnością 8
+    //Dodane bajty zawierają liczbę dodanych bajtów (np. 2 2, 3 3 3 lub 8 8 8 8 8 8 8 8)
     public static byte[] addPadding(byte[] input, int blockSize) {
         int padding = blockSize - (input.length % blockSize);
         if (padding == 0) {
@@ -289,9 +303,7 @@ public class DES {
         }
 
         byte[] padded = new byte[input.length + padding];
-
         System.arraycopy(input, 0, padded, 0, input.length);
-
         for (int i = input.length; i < padded.length; i++) {
             padded[i] = (byte) padding;
         }
