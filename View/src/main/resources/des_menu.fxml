@@ -68,7 +68,8 @@
                   <Font name="Times New Roman" size="14.0" />
                </font>
             </Button>
-            <TextArea fx:id="plaintextTextField" layoutX="39.0" layoutY="104.0" prefHeight="200.0" prefWidth="294.0" promptText="Tu podaj tekst jawny" />
+            <TextArea fx:id="plaintextTextField" layoutX="39.0" layoutY="104.0" prefHeight="200.0" prefWidth="294.0"
+                      promptText="Tu podaj tekst jawny" wrapText="true"/>
             <Label fx:id="fileWithPlaintextlabel" layoutX="39.0" layoutY="33.0" text="Otwórz plik zawierający tekst jawny">
                <font>
                   <Font name="Times New Roman" size="14.0" />
@@ -87,7 +88,8 @@
                   <Font name="Times New Roman" size="14.0" />
                </font>
             </Button>
-            <TextArea fx:id="ciphertextTextField" layoutX="558.0" layoutY="107.0" prefHeight="200.0" prefWidth="294.0" promptText="Tu  podaj szyfrogram" />
+            <TextArea fx:id="ciphertextTextField" layoutX="558.0" layoutY="107.0" prefHeight="200.0" prefWidth="294.0"
+                      promptText="Tu  podaj szyfrogram" wrapText="true"/>
             <Button fx:id="encryptionButton" layoutX="415.0" layoutY="136.0" mnemonicParsing="false" text="Szyfruj =&gt;"
             onAction="#encrypt">
                <font>

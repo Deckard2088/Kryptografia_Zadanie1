@@ -174,11 +174,12 @@ public class MenuController {
                 logger.info("Wczytano plik: {}", file.getAbsolutePath());
 
                 String content;
+                //jeśli wczytano plik tekstowy to wyświetl jego zawartość w UTF-8, w przeciwnym razie - base64
                 if (fileName.endsWith(".txt") || fileName.endsWith(".xml")){
                     content = new String(fileBytes, StandardCharsets.UTF_8);
                     //content = Files.readString(file.toPath());
                 } else {
-                    content = new String(fileBytes, StandardCharsets.UTF_8);
+                    content = Base64.getEncoder().encodeToString(fileBytes);
                 }
 
                 textInput.setText(content);
