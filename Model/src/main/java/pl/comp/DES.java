@@ -1,6 +1,9 @@
 package pl.comp;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -278,5 +281,32 @@ public class DES {
         }
 
         return bitPermutation(encryptedBlock, IPminus1);
+    }
+
+    public List<byte[]> createBlocks(byte[] input, int blockSize){
+        int numberOfBytes = input.length;
+        List<byte[]> blocks = new ArrayList<>();
+        //liczba nieużytych bajtów, użyte do uzupełnienia bloku
+        int padding = blockSize - (input.length % blockSize);
+        if (padding == 0) {
+            padding = blockSize;
+        }
+        //tablica z paddingiem
+        byte[] tableWithPadding = new byte[input.length + padding];
+        //przekopiowanie wartości z input do nowej tablicy
+        System.arraycopy(input, 0, tableWithPadding, 0, blockSize);
+        //wstawienie paddingu
+        for (int i = numberOfBytes; i < tableWithPadding.length; i++){
+            tableWithPadding[i] = (byte) padding;
+        }
+
+        //dzielenie na bloki tablicy z paddingiem
+        for (int i = 0; i < tableWithPadding.length; i += blockSize){
+            byte[] block = new byte[blockSize];
+            //arrayCopy to to samo co kopiowanie przez pętlę for
+            System.arraycopy(input, i, block, 0, blockSize);
+            blocks.add(block);
+        }
+        return blocks;
     }
 }
